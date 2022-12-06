@@ -34,4 +34,17 @@ class _$ArtCollectionService extends ArtCollectionService {
     );
     return client.send<ArtCollection, ArtCollection>($request);
   }
+
+  @override
+  Future<Response<ArtObjectDetailsResponse>> _getArtObjectDetails(
+      {required String objectNumber}) {
+    final $url = '/collection/${objectNumber}';
+    final $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+    );
+    return client
+        .send<ArtObjectDetailsResponse, ArtObjectDetailsResponse>($request);
+  }
 }
