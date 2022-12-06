@@ -14,7 +14,8 @@ class ApiServiceBuilder {
   }
 
   static Request _addKeyInterceptor(Request request) {
-    request.parameters.putIfAbsent('key', () => _apiKey);
-    return request;
+    final parameters = Map.of(request.parameters)
+      ..putIfAbsent('key', () => _apiKey);
+    return request.copyWith(parameters: parameters);
   }
 }
