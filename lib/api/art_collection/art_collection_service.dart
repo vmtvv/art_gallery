@@ -24,14 +24,15 @@ abstract class ArtCollectionService extends ChopperService {
   }
 
   Future<Response<ArtCollection>> getArtCollection(
-      {required String involvedMaker}) {
+      {required int century, String? involvedMaker}) {
     clientMappings.putIfAbsent(
         ArtCollection, () => ArtCollection.fromJsonFactory);
 
-    return _getArtCollection(involvedMaker: involvedMaker);
+    return _getArtCollection(century: century, involvedMaker: involvedMaker);
   }
 
   @Get()
   Future<Response<ArtCollection>> _getArtCollection(
-      {@Query() required String involvedMaker});
+      {@Query('f.dating.period') required int century,
+      @Query('involvedMaker') String? involvedMaker});
 }
