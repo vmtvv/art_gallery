@@ -14,6 +14,14 @@ class ArtCollectionRepository {
     return collection.toDomain();
   }
 
+  Future<ArtObjectDetails> getArtObjectDetails(
+      {required String objectNumber}) async {
+    final response =
+        await service.getArtObjectDetails(objectNumber: objectNumber);
+    final artObjectDetails = response.body!.artObjectDetails;
+    return artObjectDetails.toDomain();
+  }
+
   void dispose() {
     service.client.dispose();
   }

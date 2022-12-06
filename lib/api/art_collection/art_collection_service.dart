@@ -35,4 +35,16 @@ abstract class ArtCollectionService extends ChopperService {
   Future<Response<ArtCollection>> _getArtCollection(
       {@Query('f.dating.period') required int century,
       @Query('involvedMaker') String? involvedMaker});
+
+  Future<Response<ArtObjectDetailsResponse>> getArtObjectDetails(
+      {required String objectNumber}) {
+    clientMappings.putIfAbsent(ArtObjectDetailsResponse,
+        () => ArtObjectDetailsResponse.fromJsonFactory);
+
+    return _getArtObjectDetails(objectNumber: objectNumber);
+  }
+
+  @Get(path: '/{objectNumber}')
+  Future<Response<ArtObjectDetailsResponse>> _getArtObjectDetails(
+      {@Path('objectNumber') required String objectNumber});
 }
