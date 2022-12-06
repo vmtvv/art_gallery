@@ -2,6 +2,7 @@ import 'package:art_gallery/art_details/art_details.dart';
 import 'package:art_gallery/domain/domain.dart' as domain;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ArtDetailsPage extends StatefulWidget {
   const ArtDetailsPage({Key? key}) : super(key: key);
@@ -63,7 +64,8 @@ class ArtDetailsPageState extends State<ArtDetailsPage> {
         SafeArea(
           child: IconButton(
             icon: const Icon(Icons.arrow_back),
-            tooltip: 'Navigate back',
+            tooltip:
+                AppLocalizations.of(context)!.art_details_back_button_tooltip,
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -120,7 +122,8 @@ class ArtDetailsPageState extends State<ArtDetailsPage> {
             child: Center(
               child: state.status == ArtDetailsStatus.loading
                   ? const CircularProgressIndicator()
-                  : const Text('no information'),
+                  : Text(
+                      AppLocalizations.of(context)!.art_details_no_information),
             ),
           );
         }
