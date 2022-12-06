@@ -18,13 +18,13 @@ class GalleryItem extends StatelessWidget {
         semanticContainer: true,
         child: Stack(
           children: [
-            if (artObject.image != null)
+            if (artObject.headerImage != null)
               SizedBox(
                 height: 200,
                 width: MediaQuery.of(context).size.width,
                 child: Image.network(
-                  artObject.image!.url,
-                  fit: BoxFit.fill,
+                  artObject.headerImage!.url,
+                  fit: BoxFit.cover,
                 ),
               ),
             Positioned.fill(
