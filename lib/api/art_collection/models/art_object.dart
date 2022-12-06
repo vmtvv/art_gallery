@@ -9,6 +9,8 @@ class ArtObject {
     required this.id,
     required this.objectNumber,
     required this.title,
+    required this.longTitle,
+    this.webImage,
     this.headerImage,
     required this.principalOrFirstMaker,
   });
@@ -22,6 +24,10 @@ class ArtObject {
   final String objectNumber;
   @JsonKey(name: 'title')
   final String title;
+  @JsonKey(name: 'longTitle')
+  final String longTitle;
+  @JsonKey(name: 'webImage')
+  final Image? webImage;
   @JsonKey(name: 'headerImage')
   final Image? headerImage;
   @JsonKey(name: 'principalOrFirstMaker')

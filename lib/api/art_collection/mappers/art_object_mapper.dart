@@ -9,7 +9,9 @@ extension ArtObjectMapper on api.ArtObject {
         id.selfOrEmpty(),
         objectNumber.selfOrEmpty(),
         title.selfOrEmpty(),
-        headerImage!.toDomain(),
+        longTitle.selfOrEmpty(),
+        webImage?.toDomain(),
+        headerImage?.toDomain(),
         principalOrFirstMaker.selfOrEmpty());
   }
 }

@@ -1,3 +1,4 @@
+import 'package:art_gallery/art_details/view/view.dart';
 import 'package:art_gallery/domain/domain.dart';
 import 'package:art_gallery/gallery/gallery.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +43,8 @@ class GalleryPageState extends State<GalleryPage> {
                 } else {
                   return GalleryItem(
                     artObject: state.artCollection!.artObjects[index - 1],
-                    onTap: (artOject) => _navigateToArtObjectDetails(),
+                    onTap: (artObject) =>
+                        _navigateToArtObjectDetails(artObject),
                   );
                 }
               },
@@ -61,5 +63,11 @@ class GalleryPageState extends State<GalleryPage> {
     );
   }
 
-  void _navigateToArtObjectDetails() {}
+  void _navigateToArtObjectDetails(ArtObject artObject) {
+    final arguments = ArtDetailsArguments(
+        title: artObject.longTitle,
+        number: artObject.number,
+        image: artObject.image);
+    Navigator.push(context, ArtDetailsPage.route(arguments: arguments));
+  }
 }
