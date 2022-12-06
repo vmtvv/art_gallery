@@ -17,10 +17,15 @@ class _$ArtCollectionService extends ArtCollectionService {
   final definitionType = ArtCollectionService;
 
   @override
-  Future<Response<ArtCollection>> _getArtCollection(
-      {required String involvedMaker}) {
+  Future<Response<ArtCollection>> _getArtCollection({
+    required int century,
+    String? involvedMaker,
+  }) {
     final $url = '/collection';
-    final $params = <String, dynamic>{'involvedMaker': involvedMaker};
+    final $params = <String, dynamic>{
+      'f.dating.period': century,
+      'involvedMaker': involvedMaker,
+    };
     final $request = Request(
       'GET',
       $url,

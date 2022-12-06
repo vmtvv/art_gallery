@@ -1,11 +1,26 @@
+import 'package:art_gallery/api/api.dart';
+import 'package:art_gallery/domain/domain.dart';
+import 'package:art_gallery/gallery/gallery.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        Provider.value(
+          value: ArtCollectionRepository(
+            ApiServiceBuilder.createArtCollectionService(),
+          ),
+        ),
+      ],
+      child: const App(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class App extends StatelessWidget {
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: const Center(
-        child: Text(
-          'Welcome',
-        ),
-      ),
+      body: const GalleryPage(),
     );
   }
 }

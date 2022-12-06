@@ -6,9 +6,10 @@ class ArtCollectionRepository {
 
   ArtCollectionRepository(this.service);
 
-  Future<ArtCollection> getCollection({required String involvedMaker}) async {
-    final response =
-        await service.getArtCollection(involvedMaker: involvedMaker);
+  Future<ArtCollection> getCollection(
+      {required int century, String? involvedMaker}) async {
+    final response = await service.getArtCollection(
+        century: century, involvedMaker: involvedMaker);
     final collection = response.body!;
     return collection.toDomain();
   }
