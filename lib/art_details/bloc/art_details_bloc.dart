@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'art_details_event.dart';
 part 'art_details_state.dart';
 
-enum ArtDetailsStatus { unknown, loading, loaded }
+enum ArtDetailsStatus { unknown, failed, loading, loaded }
 
 class ArtDetailsBloc extends Bloc<ArtDetailsEvent, ArtDetailsState> {
   ArtDetailsBloc({required ArtCollectionRepository artCollectionRepository})
@@ -21,9 +21,13 @@ class ArtDetailsBloc extends Bloc<ArtDetailsEvent, ArtDetailsState> {
     ArtDetailsNumberSelected event,
     Emitter<ArtDetailsState> emit,
   ) async {
-    emit(const ArtDetailsState.loading());
-    final artObjectDetails = await _tryGetArtDetails(number: event.number);
-    return emit(ArtDetailsState.loaded(artObjectDetails!));
+    try {
+      emit(const ArtDetailsState.loading());
+      final artObjectDetails = await _tryGetArtDetails(number: event.number);
+      return emit(ArtDetailsState.loaded(artObjectDetails!));
+    } catch (_) {
+      emit(const ArtDetailsState.failed());
+    }
   }
 
   Future<ArtObjectDetails?> _tryGetArtDetails({required String number}) async {

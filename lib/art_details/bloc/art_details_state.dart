@@ -11,6 +11,8 @@ class ArtDetailsState extends Equatable {
 
   const ArtDetailsState.unknown() : this._(status: ArtDetailsStatus.unknown);
 
+  const ArtDetailsState.failed() : this._(status: ArtDetailsStatus.failed);
+
   const ArtDetailsState.loading() : this._(status: ArtDetailsStatus.loading);
 
   const ArtDetailsState.loaded(ArtObjectDetails artObjectDetails)

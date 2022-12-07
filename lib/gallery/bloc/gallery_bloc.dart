@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'gallery_event.dart';
 part 'gallery_state.dart';
 
-enum GalleryStatus { unknown, loading, loaded }
+enum GalleryStatus { unknown, failed, loading, loaded }
 
 class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
   GalleryBloc({required ArtCollectionRepository artCollectionRepository})
@@ -27,18 +27,18 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
     GalleryCenturySelected event,
     Emitter<GalleryState> emit,
   ) async {
-    emit(const GalleryState.loading());
-    final artCollection = await _tryGetArtCollection(century: event.century);
-    return emit(GalleryState.loaded(artCollection!));
+    try {
+      emit(const GalleryState.loading());
+      final artCollection = await _getArtCollection(century: event.century);
+      emit(GalleryState.loaded(artCollection));
+    } catch (_) {
+      emit(const GalleryState.failed());
+    }
   }
 
-  Future<ArtCollection?> _tryGetArtCollection({required int century}) async {
-    try {
-      final artCollection =
-          await _artCollectionRepository.getCollection(century: century);
-      return artCollection;
-    } catch (_) {
-      return null;
-    }
+  Future<ArtCollection> _getArtCollection({required int century}) async {
+    final artCollection =
+        await _artCollectionRepository.getCollection(century: century);
+    return artCollection;
   }
 }
