@@ -1,7 +1,9 @@
 import 'package:art_gallery/api/api.dart';
 import 'package:art_gallery/domain/domain.dart';
 import 'package:art_gallery/gallery/gallery.dart';
+import 'package:art_gallery/shared/shared.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
@@ -11,8 +13,12 @@ void main() {
     MultiProvider(
       providers: [
         Provider.value(
-          value: ArtCollectionRepository(
+          value: AppLogger(),
+        ),
+        RepositoryProvider<ArtCollectionRepository>(
+          create: (context) => ArtCollectionRepository(
             ApiServiceBuilder.createArtCollectionService(),
+            Provider.of<AppLogger>(context, listen: false),
           ),
         ),
       ],

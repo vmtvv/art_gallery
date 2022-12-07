@@ -1,15 +1,14 @@
 part of 'gallery_bloc.dart';
 
 class GalleryState extends Equatable {
-  const GalleryState._({
-    required this.status,
-    this.artCollection,
-  });
+  const GalleryState._({required this.status, this.artCollection});
 
   final GalleryStatus status;
   final ArtCollection? artCollection;
 
   const GalleryState.unknown() : this._(status: GalleryStatus.unknown);
+
+  const GalleryState.failed() : this._(status: GalleryStatus.failed);
 
   const GalleryState.loading() : this._(status: GalleryStatus.loading);
 

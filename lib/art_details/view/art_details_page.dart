@@ -1,5 +1,6 @@
 import 'package:art_gallery/art_details/art_details.dart';
 import 'package:art_gallery/domain/domain.dart' as domain;
+import 'package:art_gallery/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -23,21 +24,30 @@ class ArtDetailsPage extends StatefulWidget {
 }
 
 class ArtDetailsPageState extends State<ArtDetailsPage> {
+  late String _number;
+  late domain.Image? _image;
+
   @override
   Widget build(BuildContext context) {
     final args =
         ModalRoute.of(context)!.settings.arguments as ArtDetailsArguments;
+    _number = args.number;
+    _image = args.image;
+
     return BlocProvider(
       create: (context) => ArtDetailsBloc(
           artCollectionRepository:
               RepositoryProvider.of<domain.ArtCollectionRepository>(context))
-        ..add(ArtDetailsNumberSelected(args.number)),
+        ..add(ArtDetailsNumberSelected(_number)),
       child: Scaffold(
         body: SingleChildScrollView(
           child: Column(
             children: [
-              _buildHeader(context, args.image),
-              _buildDetails(context),
+              SizedBox(
+                height: 400,
+                child: _buildHeader(context, _image),
+              ),
+              _buildBody(context),
               const SizedBox(height: 16),
             ],
           ),
@@ -75,59 +85,73 @@ class ArtDetailsPageState extends State<ArtDetailsPage> {
     );
   }
 
-  Widget _buildDetails(BuildContext context) {
+  Widget _buildBody(BuildContext context) {
     return BlocBuilder<ArtDetailsBloc, ArtDetailsState>(
       builder: ((context, state) {
         if (state.status == ArtDetailsStatus.loaded) {
           final objectDetails = state.artObjectDetails!;
-          return SafeArea(
-            top: false,
-            bottom: false,
-            child: Container(
-              alignment: Alignment.topLeft,
-              margin: const EdgeInsets.only(left: 16, top: 32),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    objectDetails.longTitle,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    objectDetails.subTitle,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w300,
-                      fontSize: 14,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    objectDetails.plaqueDescription,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
+          return _buildDetails(objectDetails);
+        } else if (state.status == ArtDetailsStatus.loading) {
+          return Container(
+            margin: const EdgeInsets.all(32),
+            child: const CircularProgressIndicator(),
+          );
+        } else if (state.status == ArtDetailsStatus.failed) {
+          return Container(
+            margin: const EdgeInsets.all(32),
+            child: Retry(
+              onPressed: () => context
+                  .read<ArtDetailsBloc>()
+                  .add(ArtDetailsNumberSelected(_number)),
             ),
           );
         } else {
           return Container(
             margin: const EdgeInsets.all(32),
-            child: Center(
-              child: state.status == ArtDetailsStatus.loading
-                  ? const CircularProgressIndicator()
-                  : Text(
-                      AppLocalizations.of(context)!.art_details_no_information),
-            ),
+            child:
+                Text(AppLocalizations.of(context)!.art_details_no_information),
           );
         }
       }),
+    );
+  }
+
+  Widget _buildDetails(domain.ArtObjectDetails objectDetails) {
+    return SafeArea(
+      top: false,
+      bottom: false,
+      child: Container(
+        alignment: Alignment.topLeft,
+        margin: const EdgeInsets.only(left: 16, top: 32),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              objectDetails.longTitle,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              objectDetails.subTitle,
+              style: const TextStyle(
+                fontWeight: FontWeight.w300,
+                fontSize: 14,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              objectDetails.plaqueDescription,
+              style: const TextStyle(
+                fontWeight: FontWeight.w400,
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

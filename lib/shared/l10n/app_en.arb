@@ -2,5 +2,8 @@
   "appTitle": "App Gallery",
 
   "art_details_back_button_tooltip": "Navigate back",
-  "art_details_no_information": "Information is not available"
+  "art_details_no_information": "Information is not available",
+
+  "retryMessage": "Ooops, something went wrong.",
+  "retryButton": "Retry"
 }
