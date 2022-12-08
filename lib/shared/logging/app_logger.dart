@@ -31,8 +31,8 @@ class AppLogger {
   }
 
   /// Log a message at level [Level.error].
-  void e(String Function() message) {
-    _logInternally(Level.error, message);
+  void e(String Function() message, [dynamic error, StackTrace? stackTrace]) {
+    _logInternally(Level.error, message, error, stackTrace);
   }
 
   /// Log a message at level [Level.wtf].
@@ -40,7 +40,8 @@ class AppLogger {
     _logInternally(Level.wtf, message);
   }
 
-  void _logInternally(Level level, String Function() message) {
-    _internalLogger.log(level, message);
+  void _logInternally(Level level, String Function() message,
+      [dynamic error, StackTrace? stackTrace]) {
+    _internalLogger.log(level, message, error, stackTrace);
   }
 }

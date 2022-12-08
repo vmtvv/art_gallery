@@ -31,12 +31,8 @@ class ArtDetailsBloc extends Bloc<ArtDetailsEvent, ArtDetailsState> {
   }
 
   Future<ArtObjectDetails?> _tryGetArtDetails({required String number}) async {
-    try {
-      final artObjectDetails = await _artCollectionRepository
-          .getArtObjectDetails(objectNumber: number);
-      return artObjectDetails;
-    } catch (_) {
-      return null;
-    }
+    final artObjectDetails = await _artCollectionRepository.getArtObjectDetails(
+        objectNumber: number);
+    return artObjectDetails;
   }
 }
