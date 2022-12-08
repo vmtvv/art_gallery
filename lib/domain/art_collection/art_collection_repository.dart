@@ -25,9 +25,12 @@ class ArtCollectionRepository {
       _handleResponse(response);
       final collection = response.body!;
       return collection.toDomain();
-    } on Exception catch (e) {
-      _handleException(e,
-          'Unable to get collection of century $century and maker $involvedMaker.');
+    } catch (e, s) {
+      logger.e(
+          () =>
+              'Unable to get collection of century $century and maker $involvedMaker.',
+          e,
+          s);
       rethrow;
     }
   }
@@ -40,16 +43,14 @@ class ArtCollectionRepository {
       _handleResponse(response);
       final artObjectDetails = response.body!.artObjectDetails;
       return artObjectDetails.toDomain();
-    } on Exception catch (e) {
-      _handleException(
-          e, 'Unable to retrieve art object details of number $objectNumber.');
+    } catch (e, s) {
+      logger.e(
+          () =>
+              'Unable to retrieve art object details of number $objectNumber.',
+          e,
+          s);
       rethrow;
     }
-  }
-
-  void _handleException(Exception exception, String errorMessage) {
-    var message = '$errorMessage\nReason: $exception';
-    logger.e(() => message);
   }
 
   void dispose() {
