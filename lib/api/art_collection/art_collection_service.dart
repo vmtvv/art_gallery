@@ -23,18 +23,30 @@ abstract class ArtCollectionService extends ChopperService {
     return _$ArtCollectionService(newClient);
   }
 
-  Future<Response<ArtCollection>> getArtCollection(
-      {required int century, String? involvedMaker}) {
+  Future<Response<ArtCollection>> getArtCollection({
+    int? century,
+    String? involvedMaker,
+    int? page,
+    int? countPerPage,
+  }) {
     clientMappings.putIfAbsent(
         ArtCollection, () => ArtCollection.fromJsonFactory);
 
-    return _getArtCollection(century: century, involvedMaker: involvedMaker);
+    return _getArtCollection(
+      century: century,
+      involvedMaker: involvedMaker,
+      page: page,
+      countPerPage: countPerPage,
+    );
   }
 
   @Get()
-  Future<Response<ArtCollection>> _getArtCollection(
-      {@Query('f.dating.period') required int century,
-      @Query('involvedMaker') String? involvedMaker});
+  Future<Response<ArtCollection>> _getArtCollection({
+    @Query('f.dating.period') int? century,
+    @Query('involvedMaker') String? involvedMaker,
+    @Query('p') int? page,
+    @Query('ps') int? countPerPage,
+  });
 
   Future<Response<ArtObjectDetailsResponse>> getArtObjectDetails(
       {required String objectNumber}) {

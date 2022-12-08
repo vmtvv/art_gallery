@@ -1,20 +1,38 @@
 import 'dart:async';
 
 import 'package:art_gallery/domain/domain.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stream_transform/stream_transform.dart';
 
 part 'gallery_event.dart';
 part 'gallery_state.dart';
 
-enum GalleryStatus { unknown, failed, loading, loaded }
+enum GalleryStatus { initial, failure, success }
+
+const _countPerPage = 20;
+const throttleDuration = Duration(milliseconds: 100);
+
+EventTransformer<E> throttleDroppable<E>(Duration duration) {
+  return (events, mapper) {
+    return droppable<E>().call(events.throttle(duration), mapper);
+  };
+}
 
 class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
   GalleryBloc({required ArtCollectionRepository artCollectionRepository})
       : _artCollectionRepository = artCollectionRepository,
-        super(const GalleryState.unknown()) {
-    on<GalleryCenturySelected>(_onGalleryCenturySelected);
+        super(const GalleryState(status: GalleryStatus.initial)) {
+    on<GalleryCenturySelected>(
+      _onGalleryCenturySelected,
+    );
+    on<GalleryFetched>(
+      _onGalleryFetched,
+      transformer: throttleDroppable(throttleDuration),
+    );
   }
+
   final ArtCollectionRepository _artCollectionRepository;
 
   @override
@@ -28,17 +46,63 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
     Emitter<GalleryState> emit,
   ) async {
     try {
-      emit(const GalleryState.loading());
-      final artCollection = await _getArtCollection(century: event.century);
-      emit(GalleryState.loaded(artCollection));
+      var page = 1;
+      final artCollection = await _getArtCollection(
+        century: event.century,
+        page: page,
+        countPerPage: _countPerPage,
+      );
+      return emit(
+        state.copyWith(
+          status: GalleryStatus.success,
+          century: event.century,
+          artObjects: artCollection.artObjects,
+          maxCount: artCollection.count,
+          page: page,
+        ),
+      );
     } catch (_) {
-      emit(const GalleryState.failed());
+      emit(state.copyWith(status: GalleryStatus.failure));
     }
   }
 
-  Future<ArtCollection> _getArtCollection({required int century}) async {
-    final artCollection =
-        await _artCollectionRepository.getCollection(century: century);
+  Future<void> _onGalleryFetched(
+    GalleryFetched event,
+    Emitter<GalleryState> emit,
+  ) async {
+    try {
+      if (state.hasReachedMax) return;
+      final page = state.page + 1;
+      final artCollection = await _getArtCollection(
+        century: state.century,
+        page: page,
+        countPerPage: _countPerPage,
+      );
+      artCollection.artObjects.isEmpty
+          ? emit(state.copyWith(page: page))
+          : emit(
+              state.copyWith(
+                status: GalleryStatus.success,
+                artObjects: List.of(state.artObjects)
+                  ..addAll(artCollection.artObjects),
+                page: page,
+              ),
+            );
+    } catch (_) {
+      emit(state.copyWith(status: GalleryStatus.failure));
+    }
+  }
+
+  Future<ArtCollection> _getArtCollection({
+    int? century,
+    int? page,
+    int? countPerPage,
+  }) async {
+    final artCollection = await _artCollectionRepository.getCollection(
+      century: century,
+      page: page,
+      countPerPage: countPerPage,
+    );
     return artCollection;
   }
 }

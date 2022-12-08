@@ -18,13 +18,17 @@ class _$ArtCollectionService extends ArtCollectionService {
 
   @override
   Future<Response<ArtCollection>> _getArtCollection({
-    required int century,
+    int? century,
     String? involvedMaker,
+    int? page,
+    int? countPerPage,
   }) {
     final $url = '/collection';
     final $params = <String, dynamic>{
       'f.dating.period': century,
       'involvedMaker': involvedMaker,
+      'p': page,
+      'ps': countPerPage,
     };
     final $request = Request(
       'GET',

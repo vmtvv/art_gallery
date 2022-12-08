@@ -1,20 +1,38 @@
 part of 'gallery_bloc.dart';
 
 class GalleryState extends Equatable {
-  const GalleryState._({required this.status, this.artCollection});
+  const GalleryState({
+    required this.status,
+    this.century,
+    this.artObjects = const <ArtObject>[],
+    this.maxCount = 0,
+    this.page = 0,
+  });
 
   final GalleryStatus status;
-  final ArtCollection? artCollection;
+  final int? century;
+  final List<ArtObject> artObjects;
+  final int maxCount;
+  final int page;
 
-  const GalleryState.unknown() : this._(status: GalleryStatus.unknown);
+  GalleryState copyWith({
+    GalleryStatus? status,
+    int? century,
+    List<ArtObject>? artObjects,
+    int? maxCount,
+    int? page,
+  }) {
+    return GalleryState(
+      status: status ?? this.status,
+      century: century,
+      artObjects: artObjects ?? this.artObjects,
+      maxCount: maxCount ?? this.maxCount,
+      page: page ?? this.page,
+    );
+  }
 
-  const GalleryState.failed() : this._(status: GalleryStatus.failed);
-
-  const GalleryState.loading() : this._(status: GalleryStatus.loading);
-
-  const GalleryState.loaded(ArtCollection artCollection)
-      : this._(status: GalleryStatus.loaded, artCollection: artCollection);
+  bool get hasReachedMax => artObjects.length == maxCount;
 
   @override
-  List<Object?> get props => [status, artCollection];
+  List<Object?> get props => [status, artObjects, century, page];
 }
