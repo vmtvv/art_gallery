@@ -22,15 +22,15 @@ class ArtObject {
   final String id;
   @JsonKey(name: 'objectNumber')
   final String objectNumber;
-  @JsonKey(name: 'title')
+  @JsonKey(name: 'title', defaultValue: '')
   final String title;
-  @JsonKey(name: 'longTitle')
+  @JsonKey(name: 'longTitle', defaultValue: '')
   final String longTitle;
   @JsonKey(name: 'webImage')
   final Image? webImage;
   @JsonKey(name: 'headerImage')
   final Image? headerImage;
-  @JsonKey(name: 'principalOrFirstMaker')
+  @JsonKey(name: 'principalOrFirstMaker', defaultValue: '')
   final String principalOrFirstMaker;
 
   static const fromJsonFactory = _$ArtObjectFromJson;

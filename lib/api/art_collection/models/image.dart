@@ -8,11 +8,11 @@ class Image {
 
   factory Image.fromJson(Map<String, dynamic> json) => _$ImageFromJson(json);
 
-  @JsonKey(name: 'width')
+  @JsonKey(name: 'width', defaultValue: 0)
   final num width;
-  @JsonKey(name: 'height')
+  @JsonKey(name: 'height', defaultValue: 0)
   final num height;
-  @JsonKey(name: 'url')
+  @JsonKey(name: 'url', defaultValue: '')
   final String url;
 
   static const fromJsonFactory = _$ImageFromJson;
