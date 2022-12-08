@@ -1,5 +1,7 @@
 {
-  "appTitle": "App Gallery",
+  "appTitle": "Art Gallery",
+
+  "gallery_list_empty": "No art objects found",
 
   "art_details_back_button_tooltip": "Navigate back",
   "art_details_no_information": "Information is not available",

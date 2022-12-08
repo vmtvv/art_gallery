@@ -11,10 +11,17 @@ class ArtCollectionRepository {
   ArtCollectionRepository(this.service, this.logger);
 
   Future<ArtCollection> getCollection(
-      {required int century, String? involvedMaker}) async {
+      {int? century,
+      String? involvedMaker,
+      int? page,
+      int? countPerPage}) async {
     try {
       final response = await service.getArtCollection(
-          century: century, involvedMaker: involvedMaker);
+        century: century,
+        involvedMaker: involvedMaker,
+        page: page,
+        countPerPage: countPerPage,
+      );
       _handleResponse(response);
       final collection = response.body!;
       return collection.toDomain();
