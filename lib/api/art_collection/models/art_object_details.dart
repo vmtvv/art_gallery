@@ -6,17 +6,18 @@ part 'art_object_details.g.dart';
 @JsonSerializable(explicitToJson: true)
 class ArtObjectDetails {
   ArtObjectDetails(
-      {required this.id,
-      required this.objectNumber,
-      required this.title,
-      required this.subTitle,
-      required this.longTitle,
-      this.webImage,
-      required this.principalMaker,
-      required this.description,
-      required this.plaqueDescription,
-      required this.objectTypes,
-      required this.materials});
+    this.id,
+    this.objectNumber,
+    this.title,
+    this.subTitle,
+    this.longTitle,
+    this.webImage,
+    this.principalMaker,
+    this.description,
+    this.plaqueDescription,
+    this.objectTypes,
+    this.materials,
+  );
 
   factory ArtObjectDetails.fromJson(Map<String, dynamic> json) =>
       _$ArtObjectDetailsFromJson(json);
@@ -25,19 +26,19 @@ class ArtObjectDetails {
   final String id;
   @JsonKey(name: 'objectNumber')
   final String objectNumber;
-  @JsonKey(name: 'title')
+  @JsonKey(name: 'title', defaultValue: '')
   final String title;
-  @JsonKey(name: 'subTitle')
+  @JsonKey(name: 'subTitle', defaultValue: '')
   final String subTitle;
-  @JsonKey(name: 'longTitle')
+  @JsonKey(name: 'longTitle', defaultValue: '')
   final String longTitle;
   @JsonKey(name: 'webImage')
   final Image? webImage;
-  @JsonKey(name: 'principalOrFirstMaker')
+  @JsonKey(name: 'principalOrFirstMaker', defaultValue: '')
   final String principalMaker;
-  @JsonKey(name: 'description')
+  @JsonKey(name: 'description', defaultValue: '')
   final String description;
-  @JsonKey(name: 'plaqueDescriptionEnglish')
+  @JsonKey(name: 'plaqueDescriptionEnglish', defaultValue: '')
   final String plaqueDescription;
   @JsonKey(name: 'objectTypes', defaultValue: <String>[])
   final List<String> objectTypes;

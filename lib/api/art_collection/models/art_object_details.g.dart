@@ -8,24 +8,22 @@ part of 'art_object_details.dart';
 
 ArtObjectDetails _$ArtObjectDetailsFromJson(Map<String, dynamic> json) =>
     ArtObjectDetails(
-      id: json['id'] as String,
-      objectNumber: json['objectNumber'] as String,
-      title: json['title'] as String,
-      subTitle: json['subTitle'] as String,
-      longTitle: json['longTitle'] as String,
-      webImage: json['webImage'] == null
+      json['id'] as String,
+      json['objectNumber'] as String,
+      json['title'] as String? ?? '',
+      json['subTitle'] as String? ?? '',
+      json['longTitle'] as String? ?? '',
+      json['webImage'] == null
           ? null
           : Image.fromJson(json['webImage'] as Map<String, dynamic>),
-      principalMaker: json['principalOrFirstMaker'] as String,
-      description: json['description'] as String,
-      plaqueDescription: json['plaqueDescriptionEnglish'] as String,
-      objectTypes: (json['objectTypes'] as List<dynamic>?)
+      json['principalOrFirstMaker'] as String? ?? '',
+      json['description'] as String? ?? '',
+      json['plaqueDescriptionEnglish'] as String? ?? '',
+      (json['objectTypes'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           [],
-      materials: (json['materials'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
+      (json['materials'] as List<dynamic>?)?.map((e) => e as String).toList() ??
           [],
     );
 
