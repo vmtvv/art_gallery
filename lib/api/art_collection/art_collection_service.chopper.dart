@@ -23,14 +23,14 @@ class _$ArtCollectionService extends ArtCollectionService {
     int? page,
     int? countPerPage,
   }) {
-    final $url = '/collection';
-    final $params = <String, dynamic>{
+    final String $url = '/collection';
+    final Map<String, dynamic> $params = <String, dynamic>{
       'f.dating.period': century,
       'involvedMaker': involvedMaker,
       'p': page,
       'ps': countPerPage,
     };
-    final $request = Request(
+    final Request $request = Request(
       'GET',
       $url,
       client.baseUrl,
@@ -42,8 +42,8 @@ class _$ArtCollectionService extends ArtCollectionService {
   @override
   Future<Response<ArtObjectDetailsResponse>> _getArtObjectDetails(
       {required String objectNumber}) {
-    final $url = '/collection/${objectNumber}';
-    final $request = Request(
+    final String $url = '/collection/${objectNumber}';
+    final Request $request = Request(
       'GET',
       $url,
       client.baseUrl,
