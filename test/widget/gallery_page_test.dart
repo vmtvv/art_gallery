@@ -9,7 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
 
-import '../helpers/helpers.dart';
+import 'helpers/helpers.dart';
 
 class MockAppLogger extends Mock implements AppLogger {}
 
