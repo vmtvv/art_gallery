@@ -69,7 +69,7 @@ class _GalleryListState extends State<GalleryList> {
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Retry(
+            RetryView(
               onPressed: () =>
                   context.read<GalleryBloc>().add(GalleryFetched()),
             ),

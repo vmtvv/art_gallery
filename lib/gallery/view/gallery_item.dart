@@ -18,15 +18,22 @@ class GalleryItem extends StatelessWidget {
         semanticContainer: true,
         child: Stack(
           children: [
-            if (artObject.headerImage != null)
-              SizedBox(
-                height: 200,
-                width: MediaQuery.of(context).size.width,
-                child: Image.network(
-                  artObject.headerImage!.url,
-                  fit: BoxFit.cover,
-                ),
-              ),
+            SizedBox(
+              height: 200,
+              width: MediaQuery.of(context).size.width,
+              child: artObject.headerImage != null &&
+                      artObject.headerImage!.url.isNotEmpty
+                  ? Image.network(
+                      artObject.headerImage!.url,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Center(
+                          child: Text('Not available'),
+                        );
+                      },
+                    )
+                  : null,
+            ),
             Positioned.fill(
               child: Align(
                 alignment: Alignment.bottomLeft,

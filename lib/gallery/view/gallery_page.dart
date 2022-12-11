@@ -7,33 +7,42 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 const _artCollectionCentury = 19;
 
-class GalleryPage extends StatefulWidget {
-  const GalleryPage({Key? key}) : super(key: key);
+class GalleryPage extends StatelessWidget {
+  const GalleryPage({super.key});
 
   static Route<void> route() {
     return MaterialPageRoute<void>(builder: (_) => const GalleryPage());
   }
 
   @override
-  GalleryPageState createState() {
-    return GalleryPageState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => GalleryBloc(
+          artCollectionRepository:
+              RepositoryProvider.of<ArtCollectionRepository>(context))
+        ..add(const GalleryCenturySelected(_artCollectionCentury)),
+      child: const GalleryView(),
+    );
   }
 }
 
-class GalleryPageState extends State<GalleryPage> {
+class GalleryView extends StatefulWidget {
+  const GalleryView({super.key});
+
+  @override
+  GalleryViewState createState() {
+    return GalleryViewState();
+  }
+}
+
+class GalleryViewState extends State<GalleryView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.appTitle),
       ),
-      body: BlocProvider(
-        create: (context) => GalleryBloc(
-            artCollectionRepository:
-                RepositoryProvider.of<ArtCollectionRepository>(context))
-          ..add(const GalleryCenturySelected(_artCollectionCentury)),
-        child: GalleryList(onItemTap: _navigateToArtObjectDetails),
-      ),
+      body: GalleryList(onItemTap: _navigateToArtObjectDetails),
     );
   }
 
