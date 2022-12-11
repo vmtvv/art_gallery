@@ -1,5 +1,7 @@
 import 'package:art_gallery/domain/domain.dart' as domain;
+import 'package:art_gallery/shared/shared.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class GalleryItem extends StatelessWidget {
   final domain.ArtObject artObject;
@@ -26,11 +28,8 @@ class GalleryItem extends StatelessWidget {
                   ? Image.network(
                       artObject.headerImage!.url,
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Center(
-                          child: Text('Not available'),
-                        );
-                      },
+                      errorBuilder: (context, error, stackTrace) =>
+                          const NoImage(),
                     )
                   : null,
             ),
