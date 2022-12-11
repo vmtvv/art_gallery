@@ -2,6 +2,7 @@ import 'package:art_gallery/art_details/view/view.dart';
 import 'package:art_gallery/domain/domain.dart';
 import 'package:art_gallery/gallery/gallery.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 const _artCollectionCentury = 19;
@@ -23,6 +24,9 @@ class GalleryPageState extends State<GalleryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.appTitle),
+      ),
       body: BlocProvider(
         create: (context) => GalleryBloc(
             artCollectionRepository:
