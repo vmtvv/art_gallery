@@ -74,11 +74,8 @@ class ArtDetailsViewState extends State<ArtDetailsView> {
                   placeholderFit: BoxFit.fill,
                   image: image.url,
                   fit: BoxFit.cover,
-                  imageErrorBuilder: (context, error, stackTrace) {
-                    return const Center(
-                      child: Text('Not available'),
-                    );
-                  },
+                  imageErrorBuilder: (context, error, stackTrace) =>
+                      const NoImage(),
                 )
               : const SizedBox.shrink(),
         ),

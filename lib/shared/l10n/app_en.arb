@@ -7,5 +7,7 @@
   "art_details_no_information": "Information is not available",
 
   "retryMessage": "Ooops, something went wrong.",
-  "retryButton": "Retry"
+  "retryButton": "Retry",
+
+  "no_image_placeholder": "Not available"
 }
