@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class ArtDetailsPage extends StatefulWidget {
-  const ArtDetailsPage({Key? key}) : super(key: key);
+class ArtDetailsPage extends StatelessWidget {
+  const ArtDetailsPage({super.key});
 
   static Route<void> route({required ArtDetailsArguments arguments}) {
     return MaterialPageRoute(
@@ -18,39 +18,45 @@ class ArtDetailsPage extends StatefulWidget {
   }
 
   @override
-  ArtDetailsPageState createState() {
-    return ArtDetailsPageState();
-  }
-}
-
-class ArtDetailsPageState extends State<ArtDetailsPage> {
-  late String _number;
-  late domain.Image? _image;
-
-  @override
   Widget build(BuildContext context) {
     final args =
         ModalRoute.of(context)!.settings.arguments as ArtDetailsArguments;
-    _number = args.number;
-    _image = args.image;
 
     return BlocProvider(
       create: (context) => ArtDetailsBloc(
           artCollectionRepository:
               RepositoryProvider.of<domain.ArtCollectionRepository>(context))
-        ..add(ArtDetailsNumberSelected(_number)),
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 400,
-                child: _buildHeader(context, _image),
-              ),
-              _buildBody(context),
-              const SizedBox(height: 16),
-            ],
-          ),
+        ..add(ArtDetailsNumberSelected(args.number)),
+      child: ArtDetailsView(image: args.image),
+    );
+  }
+}
+
+class ArtDetailsView extends StatefulWidget {
+  const ArtDetailsView({super.key, this.image});
+
+  final domain.Image? image;
+
+  @override
+  ArtDetailsViewState createState() {
+    return ArtDetailsViewState();
+  }
+}
+
+class ArtDetailsViewState extends State<ArtDetailsView> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 400,
+              child: _buildHeader(context, widget.image),
+            ),
+            _buildBody(context),
+            const SizedBox(height: 16),
+          ],
         ),
       ),
     );
@@ -68,6 +74,11 @@ class ArtDetailsPageState extends State<ArtDetailsPage> {
                   placeholderFit: BoxFit.fill,
                   image: image.url,
                   fit: BoxFit.cover,
+                  imageErrorBuilder: (context, error, stackTrace) {
+                    return const Center(
+                      child: Text('Not available'),
+                    );
+                  },
                 )
               : const SizedBox.shrink(),
         ),
@@ -88,29 +99,32 @@ class ArtDetailsPageState extends State<ArtDetailsPage> {
   Widget _buildBody(BuildContext context) {
     return BlocBuilder<ArtDetailsBloc, ArtDetailsState>(
       builder: ((context, state) {
-        if (state.status == ArtDetailsStatus.loaded) {
-          final objectDetails = state.artObjectDetails!;
-          return _buildDetails(objectDetails);
-        } else if (state.status == ArtDetailsStatus.loading) {
-          return Container(
-            margin: const EdgeInsets.all(32),
-            child: const CircularProgressIndicator(),
-          );
-        } else if (state.status == ArtDetailsStatus.failed) {
-          return Container(
-            margin: const EdgeInsets.all(32),
-            child: Retry(
-              onPressed: () => context
-                  .read<ArtDetailsBloc>()
-                  .add(ArtDetailsNumberSelected(_number)),
-            ),
-          );
-        } else {
-          return Container(
-            margin: const EdgeInsets.all(32),
-            child:
-                Text(AppLocalizations.of(context)!.art_details_no_information),
-          );
+        switch (state.status) {
+          case ArtDetailsStatus.initial:
+            return Container(
+              margin: const EdgeInsets.all(32),
+              child: const ActivityIndicator(),
+            );
+          case ArtDetailsStatus.failure:
+            return Container(
+              margin: const EdgeInsets.all(32),
+              child: RetryView(
+                onPressed: () => context
+                    .read<ArtDetailsBloc>()
+                    .add(ArtDetailsNumberSelected(state.selectedNumber!)),
+              ),
+            );
+          case ArtDetailsStatus.success:
+            final objectDetails = state.artObjectDetails;
+            if (objectDetails != null) {
+              return _buildDetails(objectDetails);
+            } else {
+              return Container(
+                margin: const EdgeInsets.all(32),
+                child: Text(
+                    AppLocalizations.of(context)!.art_details_no_information),
+              );
+            }
         }
       }),
     );

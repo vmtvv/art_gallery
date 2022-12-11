@@ -7,12 +7,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'art_details_event.dart';
 part 'art_details_state.dart';
 
-enum ArtDetailsStatus { unknown, failed, loading, loaded }
+enum ArtDetailsStatus { initial, failure, success }
 
 class ArtDetailsBloc extends Bloc<ArtDetailsEvent, ArtDetailsState> {
   ArtDetailsBloc({required ArtCollectionRepository artCollectionRepository})
       : _artCollectionRepository = artCollectionRepository,
-        super(const ArtDetailsState.unknown()) {
+        super(const ArtDetailsState(status: ArtDetailsStatus.initial)) {
     on<ArtDetailsNumberSelected>(_onArtDetailsNumberSelected);
   }
   final ArtCollectionRepository _artCollectionRepository;
@@ -22,11 +22,17 @@ class ArtDetailsBloc extends Bloc<ArtDetailsEvent, ArtDetailsState> {
     Emitter<ArtDetailsState> emit,
   ) async {
     try {
-      emit(const ArtDetailsState.loading());
       final artObjectDetails = await _tryGetArtDetails(number: event.number);
-      return emit(ArtDetailsState.loaded(artObjectDetails!));
+
+      return emit(
+        state.copyWith(
+          status: ArtDetailsStatus.success,
+          selectedNumber: event.number,
+          artObjectDetails: artObjectDetails,
+        ),
+      );
     } catch (_) {
-      emit(const ArtDetailsState.failed());
+      emit(state.copyWith(status: ArtDetailsStatus.failure));
     }
   }
 
