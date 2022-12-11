@@ -5,84 +5,97 @@ import 'package:art_gallery/domain/exceptions/operation_failed_exception.dart';
 import 'package:art_gallery/shared/shared.dart';
 import 'package:chopper/chopper.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 
-@GenerateNiceMocks([
-  MockSpec<AppLogger>(),
-  MockSpec<api.ArtCollectionService>(),
-  MockSpec<api.ArtObjectDetailsResponse>(),
-  MockSpec<api.ArtObjectDetails>(),
-  MockSpec<Response>(
-    as: #MockSuccessfulResponse,
-    fallbackGenerators: {#isSuccessful: success},
-  ),
-  MockSpec<Response>(
-    as: #MockFailedResponse,
-    fallbackGenerators: {#isSuccessful: failure},
-  ),
-])
-import 'art_collection_repository_test.mocks.dart';
+class MockAppLogger extends Mock implements AppLogger {}
 
-bool success() => true;
-bool failure() => false;
+class MockArtCollectionService extends Mock
+    implements api.ArtCollectionService {}
+
+class MockResponse<BodyType> extends Mock implements Response<BodyType> {}
 
 void main() {
   group('ArtCollectionRepository unit tests', () {
-    MockArtCollectionService service = MockArtCollectionService();
-    MockAppLogger appLogger = MockAppLogger();
-    domain.ArtCollectionRepository repository =
-        domain.ArtCollectionRepository(service, appLogger);
+    late AppLogger appLogger;
+    late api.ArtCollectionService artCollectionService;
+    late domain.ArtCollectionRepository artCollectionRepository;
+
+    setUp(() {
+      appLogger = MockAppLogger();
+      artCollectionService = MockArtCollectionService();
+      artCollectionRepository =
+          domain.ArtCollectionRepository(artCollectionService, appLogger);
+    });
 
     test('Returns art collection', () async {
-      final response = MockSuccessfulResponse<api.ArtCollection>();
-
-      when(response.body).thenReturn(api.ArtCollection(10, []));
-      when(service.getArtCollection())
+      final response = MockResponse<api.ArtCollection>();
+      when(() => response.isSuccessful).thenReturn(true);
+      when(() => response.body).thenReturn(api.ArtCollection(10, []));
+      when(() => artCollectionService.getArtCollection())
           .thenAnswer((_) => Future.value(response));
 
-      expect(await repository.getCollection(), isA<domain.ArtCollection>());
+      expect(await artCollectionRepository.getCollection(),
+          isA<domain.ArtCollection>());
     });
 
     test('Returns art object details', () async {
       const artObjectNumber = "test-1-test";
-      final response = MockSuccessfulResponse<api.ArtObjectDetailsResponse>();
-      final artObjectDetailsResponse = MockArtObjectDetailsResponse();
+      final response = MockResponse<api.ArtObjectDetailsResponse>();
+      final artObjectDetailsResponse = api.ArtObjectDetailsResponse(
+        api.ArtObjectDetails(
+          'test-id-1',
+          'test-number-1',
+          'Test Object Details',
+          'Test subtitle',
+          'Test long title of test object',
+          null,
+          'Test Principal Maker',
+          'This is the test description',
+          'This is plaque description for the art object details',
+          ['Test Type'],
+          ['Test Material'],
+        ),
+      );
 
-      when(artObjectDetailsResponse.artObjectDetails)
-          .thenReturn(MockArtObjectDetails());
-      when(response.body).thenReturn(artObjectDetailsResponse);
-      when(service.getArtObjectDetails(objectNumber: artObjectNumber))
+      when(() => response.isSuccessful).thenReturn(true);
+      when(() => response.body).thenReturn(artObjectDetailsResponse);
+      when(() => artCollectionService.getArtObjectDetails(
+              objectNumber: artObjectNumber))
           .thenAnswer((_) => Future.value(response));
 
       expect(
-          await repository.getArtObjectDetails(objectNumber: artObjectNumber),
+          await artCollectionRepository.getArtObjectDetails(
+              objectNumber: artObjectNumber),
           isA<domain.ArtObjectDetails>());
     });
 
     test('Handles failed art collection response', () {
-      final response = MockFailedResponse<api.ArtCollection>();
+      final response = MockResponse<api.ArtCollection>();
 
-      when(response.error).thenReturn('I am an error!');
-      when(service.getArtCollection())
+      when(() => response.isSuccessful).thenReturn(false);
+      when(() => response.error).thenReturn('I am an error!');
+      when(() => artCollectionService.getArtCollection())
           .thenAnswer((_) => Future.value(response));
 
       expect(
-        repository.getCollection(),
+        artCollectionRepository.getCollection(),
         throwsA(isA<OperationFailedException>()),
       );
     });
 
     test('Handles failed art object details response', () {
       const artObjectNumber = "test-2-test";
-      final response = MockFailedResponse<api.ArtObjectDetailsResponse>();
+      final response = MockResponse<api.ArtObjectDetailsResponse>();
 
-      when(response.error).thenReturn('I am an error!');
-      when(service.getArtObjectDetails(objectNumber: artObjectNumber))
+      when(() => response.isSuccessful).thenReturn(false);
+      when(() => response.error).thenReturn('I am an error!');
+      when(() => artCollectionService.getArtObjectDetails(
+              objectNumber: artObjectNumber))
           .thenAnswer((_) => Future.value(response));
 
       expect(
-        repository.getArtObjectDetails(objectNumber: artObjectNumber),
+        artCollectionRepository.getArtObjectDetails(
+            objectNumber: artObjectNumber),
         throwsA(isA<OperationFailedException>()),
       );
     });
