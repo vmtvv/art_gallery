@@ -1,6 +1,7 @@
-import 'package:art_gallery/art_details/view/view.dart';
+import 'package:art_gallery/art_details/art_details.dart';
 import 'package:art_gallery/domain/domain.dart';
 import 'package:art_gallery/gallery/gallery.dart';
+import 'package:art_gallery/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,7 +43,25 @@ class GalleryViewState extends State<GalleryView> {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.appTitle),
       ),
-      body: GalleryList(onItemTap: _navigateToArtObjectDetails),
+      body: BlocBuilder<GalleryBloc, GalleryState>(
+        builder: (context, state) {
+          switch (state.status) {
+            case GalleryStatus.failure:
+              return GalleryError(
+                onRetry: () =>
+                    context.read<GalleryBloc>().add(GalleryFetched()),
+              );
+            case GalleryStatus.success:
+              return GalleryList(
+                artObjects: state.artObjects,
+                hasReachedMax: state.hasReachedMax,
+                onItemTap: _navigateToArtObjectDetails,
+              );
+            case GalleryStatus.initial:
+              return const ActivityIndicator();
+          }
+        },
+      ),
     );
   }
 
