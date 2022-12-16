@@ -6,8 +6,15 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class GalleryList extends StatefulWidget {
-  const GalleryList({super.key, required this.onItemTap});
+  const GalleryList({
+    super.key,
+    required this.artObjects,
+    required this.hasReachedMax,
+    required this.onItemTap,
+  });
 
+  final List<ArtObject> artObjects;
+  final bool hasReachedMax;
   final Function(ArtObject) onItemTap;
 
   @override
@@ -25,57 +32,23 @@ class _GalleryListState extends State<GalleryList> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GalleryBloc, GalleryState>(
-      builder: (context, state) {
-        switch (state.status) {
-          case GalleryStatus.failure:
-            return _buildError(context);
-          case GalleryStatus.success:
-            return _buildList(context, state.artObjects, state.hasReachedMax);
-          case GalleryStatus.initial:
-            return const ActivityIndicator();
-        }
-      },
-    );
-  }
-
-  Widget _buildList(
-    BuildContext context,
-    List<ArtObject> artObjects,
-    bool hasReachedMax,
-  ) {
-    if (artObjects.isEmpty) {
+    if (widget.artObjects.isEmpty) {
       return Center(
           child: Text(AppLocalizations.of(context)!.gallery_list_empty));
     }
     return ListView.builder(
       itemBuilder: (BuildContext context, int index) {
-        return index >= artObjects.length
+        return index >= widget.artObjects.length
             ? const ActivityIndicator(size: 24, strokeWidth: 1.5)
             : GalleryItem(
-                artObject: artObjects[index],
+                artObject: widget.artObjects[index],
                 onTap: widget.onItemTap,
               );
       },
-      itemCount: hasReachedMax ? artObjects.length : artObjects.length + 1,
+      itemCount: widget.hasReachedMax
+          ? widget.artObjects.length
+          : widget.artObjects.length + 1,
       controller: _scrollController,
-    );
-  }
-
-  Widget _buildError(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            RetryView(
-              onPressed: () =>
-                  context.read<GalleryBloc>().add(GalleryFetched()),
-            ),
-          ],
-        ),
-      ],
     );
   }
 

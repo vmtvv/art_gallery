@@ -5,5 +5,5 @@ class ArtDetailsArguments {
   final String title;
   final Image? image;
 
-  ArtDetailsArguments({required this.title, required this.number, this.image});
+  ArtDetailsArguments({required this.number, required this.title, this.image});
 }

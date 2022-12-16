@@ -32,134 +32,43 @@ class ArtDetailsPage extends StatelessWidget {
   }
 }
 
-class ArtDetailsView extends StatefulWidget {
+class ArtDetailsView extends StatelessWidget {
   const ArtDetailsView({super.key, this.image});
 
   final domain.Image? image;
 
-  @override
-  ArtDetailsViewState createState() {
-    return ArtDetailsViewState();
-  }
-}
-
-class ArtDetailsViewState extends State<ArtDetailsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(
-              height: 400,
-              child: _buildHeader(context, widget.image),
-            ),
-            _buildBody(context),
-            const SizedBox(height: 16),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeader(BuildContext context, domain.Image? image) {
-    return Stack(
-      children: [
-        SizedBox(
-          height: 400,
-          width: MediaQuery.of(context).size.width,
-          child: image != null && image.url.isNotEmpty
-              ? FadeInImage.assetNetwork(
-                  placeholder: 'assets/images/image_placeholder.jpg',
-                  placeholderFit: BoxFit.fill,
-                  image: image.url,
-                  fit: BoxFit.cover,
-                  imageErrorBuilder: (context, error, stackTrace) =>
-                      const NoImage(),
-                )
-              : const SizedBox.shrink(),
-        ),
-        SafeArea(
-          child: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            tooltip:
-                AppLocalizations.of(context)!.art_details_back_button_tooltip,
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildBody(BuildContext context) {
-    return BlocBuilder<ArtDetailsBloc, ArtDetailsState>(
-      builder: ((context, state) {
-        switch (state.status) {
-          case ArtDetailsStatus.initial:
-            return Container(
+            ArtDetailsHeader(image: image),
+            Container(
               margin: const EdgeInsets.all(32),
-              child: const ActivityIndicator(),
-            );
-          case ArtDetailsStatus.failure:
-            return Container(
-              margin: const EdgeInsets.all(32),
-              child: RetryView(
-                onPressed: () => context
-                    .read<ArtDetailsBloc>()
-                    .add(ArtDetailsNumberSelected(state.selectedNumber!)),
-              ),
-            );
-          case ArtDetailsStatus.success:
-            final objectDetails = state.artObjectDetails;
-            if (objectDetails != null) {
-              return _buildDetails(objectDetails);
-            } else {
-              return Container(
-                margin: const EdgeInsets.all(32),
-                child: Text(
-                    AppLocalizations.of(context)!.art_details_no_information),
-              );
-            }
-        }
-      }),
-    );
-  }
-
-  Widget _buildDetails(domain.ArtObjectDetails objectDetails) {
-    return SafeArea(
-      top: false,
-      bottom: false,
-      child: Container(
-        alignment: Alignment.topLeft,
-        margin: const EdgeInsets.only(left: 16, top: 32),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              objectDetails.longTitle,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
+              child: BlocBuilder<ArtDetailsBloc, ArtDetailsState>(
+                builder: ((context, state) {
+                  switch (state.status) {
+                    case ArtDetailsStatus.initial:
+                      return const ActivityIndicator();
+                    case ArtDetailsStatus.failure:
+                      return RetryView(
+                        onPressed: () => context.read<ArtDetailsBloc>().add(
+                            ArtDetailsNumberSelected(state.selectedNumber!)),
+                      );
+                    case ArtDetailsStatus.success:
+                      final objectDetails = state.artObjectDetails;
+                      if (objectDetails != null) {
+                        return ArtDetailsInfo(artObjectDetails: objectDetails);
+                      } else {
+                        return Text(AppLocalizations.of(context)!
+                            .art_details_no_information);
+                      }
+                  }
+                }),
               ),
             ),
             const SizedBox(height: 16),
-            Text(
-              objectDetails.subTitle,
-              style: const TextStyle(
-                fontWeight: FontWeight.w300,
-                fontSize: 14,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              objectDetails.plaqueDescription,
-              style: const TextStyle(
-                fontWeight: FontWeight.w400,
-                fontSize: 14,
-              ),
-            ),
           ],
         ),
       ),
