@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:art_gallery/api/client_mapping.dart';
+import 'package:art_gallery/data/client_mappings.dart';
 import 'package:chopper/chopper.dart' as chopper;
 
 typedef _JsonFactory<T> = T Function(Map<String, dynamic> json);

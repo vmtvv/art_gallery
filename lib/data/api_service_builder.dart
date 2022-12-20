@@ -1,5 +1,5 @@
-import 'package:art_gallery/api/api.dart';
 import 'package:art_gallery/app_configuration.dart';
+import 'package:art_gallery/data/data.dart';
 import 'package:chopper/chopper.dart';
 
 class ApiServiceBuilder {

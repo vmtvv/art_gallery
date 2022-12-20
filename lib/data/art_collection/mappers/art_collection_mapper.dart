@@ -1,8 +1,7 @@
-import 'package:art_gallery/api/api.dart' as api;
-import 'package:art_gallery/api/art_collection/mappers/mappers.dart';
+import 'package:art_gallery/data/data.dart' as data;
 import 'package:art_gallery/domain/domain.dart' as domain;
 
-extension ArtCollectionMapper on api.ArtCollection {
+extension ArtCollectionMapper on data.ArtCollection {
   domain.ArtCollection toDomain() {
     return domain.ArtCollection(
       count,

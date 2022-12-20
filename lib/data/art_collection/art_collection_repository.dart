@@ -1,20 +1,21 @@
-import 'package:art_gallery/api/api.dart' as api;
-import 'package:art_gallery/domain/art_collection/art_collection.dart';
-import 'package:art_gallery/domain/exceptions/operation_failed_exception.dart';
+import 'package:art_gallery/data/data.dart' as data;
+import 'package:art_gallery/domain/domain.dart' as domain;
 import 'package:art_gallery/shared/shared.dart';
 import 'package:chopper/chopper.dart';
 
-class ArtCollectionRepository {
-  final api.ArtCollectionService service;
+class ArtCollectionRepository implements domain.ArtCollectionRepository {
+  final data.ArtCollectionService service;
   final AppLogger logger;
 
   ArtCollectionRepository(this.service, this.logger);
 
-  Future<ArtCollection> getCollection(
-      {int? century,
-      String? involvedMaker,
-      int? page,
-      int? countPerPage}) async {
+  @override
+  Future<domain.ArtCollection> getCollection({
+    int? century,
+    String? involvedMaker,
+    int? page,
+    int? countPerPage,
+  }) async {
     try {
       final response = await service.getArtCollection(
         century: century,
@@ -35,7 +36,8 @@ class ArtCollectionRepository {
     }
   }
 
-  Future<ArtObjectDetails> getArtObjectDetails(
+  @override
+  Future<domain.ArtObjectDetails> getArtObjectDetails(
       {required String objectNumber}) async {
     try {
       final response =
@@ -53,13 +55,14 @@ class ArtCollectionRepository {
     }
   }
 
+  @override
   void dispose() {
     service.client.dispose();
   }
 
   void _handleResponse(Response response) {
     if (!response.isSuccessful) {
-      throw OperationFailedException(response.error?.toString());
+      throw domain.OperationFailedException(response.error?.toString());
     }
   }
 }

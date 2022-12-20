@@ -1,4 +1,4 @@
-import 'package:art_gallery/api/art_collection/art_collection.dart' as api;
+import 'package:art_gallery/data/art_collection/art_collection.dart' as data;
 import 'package:art_gallery/domain/art_collection/art_collection.dart'
     as domain;
 import 'package:art_gallery/domain/exceptions/operation_failed_exception.dart';
@@ -10,27 +10,27 @@ import 'package:mocktail/mocktail.dart';
 class MockAppLogger extends Mock implements AppLogger {}
 
 class MockArtCollectionService extends Mock
-    implements api.ArtCollectionService {}
+    implements data.ArtCollectionService {}
 
 class MockResponse<BodyType> extends Mock implements Response<BodyType> {}
 
 void main() {
   group('ArtCollectionRepository unit tests', () {
     late AppLogger appLogger;
-    late api.ArtCollectionService artCollectionService;
+    late data.ArtCollectionService artCollectionService;
     late domain.ArtCollectionRepository artCollectionRepository;
 
     setUp(() {
       appLogger = MockAppLogger();
       artCollectionService = MockArtCollectionService();
       artCollectionRepository =
-          domain.ArtCollectionRepository(artCollectionService, appLogger);
+          data.ArtCollectionRepository(artCollectionService, appLogger);
     });
 
     test('Returns art collection', () async {
-      final response = MockResponse<api.ArtCollection>();
+      final response = MockResponse<data.ArtCollection>();
       when(() => response.isSuccessful).thenReturn(true);
-      when(() => response.body).thenReturn(api.ArtCollection(10, []));
+      when(() => response.body).thenReturn(data.ArtCollection(10, []));
       when(() => artCollectionService.getArtCollection())
           .thenAnswer((_) => Future.value(response));
 
@@ -40,9 +40,9 @@ void main() {
 
     test('Returns art object details', () async {
       const artObjectNumber = "test-1-test";
-      final response = MockResponse<api.ArtObjectDetailsResponse>();
-      final artObjectDetailsResponse = api.ArtObjectDetailsResponse(
-        api.ArtObjectDetails(
+      final response = MockResponse<data.ArtObjectDetailsResponse>();
+      final artObjectDetailsResponse = data.ArtObjectDetailsResponse(
+        data.ArtObjectDetails(
           'test-id-1',
           'test-number-1',
           'Test Object Details',
@@ -70,7 +70,7 @@ void main() {
     });
 
     test('Handles failed art collection response', () {
-      final response = MockResponse<api.ArtCollection>();
+      final response = MockResponse<data.ArtCollection>();
 
       when(() => response.isSuccessful).thenReturn(false);
       when(() => response.error).thenReturn('I am an error!');
@@ -85,7 +85,7 @@ void main() {
 
     test('Handles failed art object details response', () {
       const artObjectNumber = "test-2-test";
-      final response = MockResponse<api.ArtObjectDetailsResponse>();
+      final response = MockResponse<data.ArtObjectDetailsResponse>();
 
       when(() => response.isSuccessful).thenReturn(false);
       when(() => response.error).thenReturn('I am an error!');

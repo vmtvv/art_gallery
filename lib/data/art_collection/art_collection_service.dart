@@ -1,4 +1,4 @@
-import 'package:art_gallery/api/api.dart';
+import 'package:art_gallery/data/data.dart';
 import 'package:chopper/chopper.dart';
 
 part 'art_collection_service.chopper.dart';
