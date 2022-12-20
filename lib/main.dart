@@ -1,6 +1,6 @@
-import 'package:art_gallery/api/api.dart';
+import 'package:art_gallery/data/data.dart' as data;
 import 'package:art_gallery/app.dart';
-import 'package:art_gallery/domain/domain.dart';
+import 'package:art_gallery/domain/domain.dart' as domain;
 import 'package:art_gallery/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,9 +13,9 @@ void main() {
         Provider.value(
           value: AppLogger(),
         ),
-        RepositoryProvider<ArtCollectionRepository>(
-          create: (context) => ArtCollectionRepository(
-            ApiServiceBuilder.createArtCollectionService(),
+        RepositoryProvider<domain.ArtCollectionRepository>(
+          create: (context) => data.ArtCollectionRepository(
+            data.ApiServiceBuilder.createArtCollectionService(),
             Provider.of<AppLogger>(context, listen: false),
           ),
         ),

@@ -1,4 +1,4 @@
-import 'package:art_gallery/api/art_collection/art_collection.dart';
+import 'package:art_gallery/data/art_collection/art_collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'art_object_details_response.g.dart';
