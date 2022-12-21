@@ -28,6 +28,8 @@ abstract class ArtCollectionService extends ChopperService {
     String? involvedMaker,
     int? page,
     int? countPerPage,
+    String? sorting,
+    bool? imgOnly,
   }) {
     clientMappings.putIfAbsent(
         ArtCollection, () => ArtCollection.fromJsonFactory);
@@ -37,6 +39,8 @@ abstract class ArtCollectionService extends ChopperService {
       involvedMaker: involvedMaker,
       page: page,
       countPerPage: countPerPage,
+      sorting: sorting,
+      imgonly: imgOnly,
     );
   }
 
@@ -46,6 +50,8 @@ abstract class ArtCollectionService extends ChopperService {
     @Query('involvedMaker') String? involvedMaker,
     @Query('p') int? page,
     @Query('ps') int? countPerPage,
+    @Query('s') String? sorting,
+    @Query('imgonly') bool? imgonly,
   });
 
   Future<Response<ArtObjectDetailsResponse>> getArtObjectDetails(
