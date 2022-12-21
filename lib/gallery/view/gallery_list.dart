@@ -1,9 +1,9 @@
 import 'package:art_gallery/domain/art_collection/art_collection.dart';
 import 'package:art_gallery/gallery/gallery.dart';
-import 'package:art_gallery/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grouped_list/grouped_list.dart';
 
 class GalleryList extends StatefulWidget {
   const GalleryList({
@@ -36,7 +36,19 @@ class _GalleryListState extends State<GalleryList> {
       return Center(
           child: Text(AppLocalizations.of(context)!.gallery_list_empty));
     }
-    return ListView.builder(
+    return GroupedListView<ArtObject, String>(
+      elements: widget.artObjects,
+      groupBy: (element) => element.principalOrFirstMaker,
+      groupSeparatorBuilder: ((value) => GallerySectionHeader(title: value)),
+      itemBuilder: (context, element) {
+        return GalleryItem(
+          artObject: element,
+          onTap: widget.onItemTap,
+        );
+      },
+      controller: _scrollController,
+    );
+    /*return ListView.builder(
       itemBuilder: (BuildContext context, int index) {
         return index >= widget.artObjects.length
             ? const ActivityIndicator(size: 24, strokeWidth: 1.5)
@@ -49,7 +61,7 @@ class _GalleryListState extends State<GalleryList> {
           ? widget.artObjects.length
           : widget.artObjects.length + 1,
       controller: _scrollController,
-    );
+    );*/
   }
 
   @override

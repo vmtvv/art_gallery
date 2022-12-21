@@ -15,6 +15,8 @@ class ArtCollectionRepository implements domain.ArtCollectionRepository {
     String? involvedMaker,
     int? page,
     int? countPerPage,
+    domain.ArtCollectionSorting? sorting,
+    bool? imgOnly,
   }) async {
     try {
       final response = await service.getArtCollection(
@@ -22,6 +24,8 @@ class ArtCollectionRepository implements domain.ArtCollectionRepository {
         involvedMaker: involvedMaker,
         page: page,
         countPerPage: countPerPage,
+        sorting: sorting?.value,
+        imgOnly: imgOnly,
       );
       _handleResponse(response);
       final collection = response.body!;

@@ -51,6 +51,8 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
         century: event.century,
         page: page,
         countPerPage: _countPerPage,
+        sorting: event.sorting,
+        imgOnly: event.imgOnly,
       );
       return emit(
         state.copyWith(
@@ -59,6 +61,8 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
           artObjects: artCollection.artObjects,
           maxCount: artCollection.count,
           page: page,
+          sorting: event.sorting,
+          imgOnly: event.imgOnly,
         ),
       );
     } catch (_) {
@@ -77,6 +81,8 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
         century: state.century,
         page: page,
         countPerPage: _countPerPage,
+        sorting: state.sorting,
+        imgOnly: state.imgOnly,
       );
       artCollection.artObjects.isEmpty
           ? emit(state.copyWith(page: page))
@@ -97,11 +103,15 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
     int? century,
     int? page,
     int? countPerPage,
+    ArtCollectionSorting? sorting,
+    bool? imgOnly,
   }) async {
     final artCollection = await _artCollectionRepository.getCollection(
       century: century,
       page: page,
       countPerPage: countPerPage,
+      sorting: sorting,
+      imgOnly: imgOnly,
     );
     return artCollection;
   }

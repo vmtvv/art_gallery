@@ -19,18 +19,31 @@ class GalleryItem extends StatelessWidget {
         semanticContainer: true,
         child: Stack(
           children: [
-            SizedBox(
-              height: 200,
-              width: MediaQuery.of(context).size.width,
-              child: artObject.headerImage != null &&
-                      artObject.headerImage!.url.isNotEmpty
-                  ? Image.network(
-                      artObject.headerImage!.url,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          const NoImage(),
-                    )
-                  : null,
+            Container(
+              foregroundDecoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.black45,
+                    Colors.transparent,
+                  ],
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  stops: [0, 0.4],
+                ),
+              ),
+              child: SizedBox(
+                height: 200,
+                width: MediaQuery.of(context).size.width,
+                child: artObject.headerImage != null &&
+                        artObject.headerImage!.url.isNotEmpty
+                    ? Image.network(
+                        artObject.headerImage!.url,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const NoImage(),
+                      )
+                    : null,
+              ),
             ),
             Positioned.fill(
               child: Align(

@@ -22,6 +22,8 @@ class _$ArtCollectionService extends ArtCollectionService {
     String? involvedMaker,
     int? page,
     int? countPerPage,
+    String? sorting,
+    bool? imgonly,
   }) {
     final String $url = '/collection';
     final Map<String, dynamic> $params = <String, dynamic>{
@@ -29,6 +31,8 @@ class _$ArtCollectionService extends ArtCollectionService {
       'involvedMaker': involvedMaker,
       'p': page,
       'ps': countPerPage,
+      's': sorting,
+      'imgonly': imgonly,
     };
     final Request $request = Request(
       'GET',

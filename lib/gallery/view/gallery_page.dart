@@ -21,7 +21,11 @@ class GalleryPage extends StatelessWidget {
       create: (context) => GalleryBloc(
           artCollectionRepository:
               RepositoryProvider.of<ArtCollectionRepository>(context))
-        ..add(const GalleryCenturySelected(_artCollectionCentury)),
+        ..add(const GalleryCenturySelected(
+          century: _artCollectionCentury,
+          sorting: ArtCollectionSorting.artistDesc,
+          imgOnly: true,
+        )),
       child: const GalleryView(),
     );
   }

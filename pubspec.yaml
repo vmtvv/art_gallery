@@ -19,6 +19,7 @@ dependencies:
   bloc_concurrency: ^0.2.0
   logger: ^1.1.0
   stream_transform: ^2.1.0
+  grouped_list: ^5.1.2
 
 dev_dependencies:
   flutter_test:
