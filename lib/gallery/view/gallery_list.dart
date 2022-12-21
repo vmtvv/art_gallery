@@ -36,32 +36,21 @@ class _GalleryListState extends State<GalleryList> {
       return Center(
           child: Text(AppLocalizations.of(context)!.gallery_list_empty));
     }
-    return GroupedListView<ArtObject, String>(
-      elements: widget.artObjects,
-      groupBy: (element) => element.principalOrFirstMaker,
-      groupSeparatorBuilder: ((value) => GallerySectionHeader(title: value)),
-      itemBuilder: (context, element) {
-        return GalleryItem(
-          artObject: element,
-          onTap: widget.onItemTap,
-        );
-      },
-      controller: _scrollController,
+    return SafeArea(
+      bottom: false,
+      child: GroupedListView<ArtObject, String>(
+        elements: widget.artObjects,
+        groupBy: (element) => element.principalOrFirstMaker,
+        groupSeparatorBuilder: ((value) => GallerySectionHeader(title: value)),
+        itemBuilder: (context, element) {
+          return GalleryItem(
+            artObject: element,
+            onTap: widget.onItemTap,
+          );
+        },
+        controller: _scrollController,
+      ),
     );
-    /*return ListView.builder(
-      itemBuilder: (BuildContext context, int index) {
-        return index >= widget.artObjects.length
-            ? const ActivityIndicator(size: 24, strokeWidth: 1.5)
-            : GalleryItem(
-                artObject: widget.artObjects[index],
-                onTap: widget.onItemTap,
-              );
-      },
-      itemCount: widget.hasReachedMax
-          ? widget.artObjects.length
-          : widget.artObjects.length + 1,
-      controller: _scrollController,
-    );*/
   }
 
   @override
