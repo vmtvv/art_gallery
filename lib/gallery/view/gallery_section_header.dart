@@ -9,8 +9,11 @@ class GallerySectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.only(left: 16, top: 16, right: 16, bottom: 8),
-      child: Text(title),
+      padding: const EdgeInsets.only(left: 16, top: 32, right: 16, bottom: 8),
+      child: Text(
+        title,
+        style: const TextStyle(fontSize: 18),
+      ),
     );
   }
 }

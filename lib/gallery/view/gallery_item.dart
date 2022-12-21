@@ -15,7 +15,6 @@ class GalleryItem extends StatelessWidget {
       onTap: () => onTap(artObject),
       child: Card(
         clipBehavior: Clip.antiAliasWithSaveLayer,
-        elevation: 5,
         semanticContainer: true,
         child: Stack(
           children: [
@@ -28,7 +27,7 @@ class GalleryItem extends StatelessWidget {
                   ],
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
-                  stops: [0, 0.4],
+                  stops: [0, 1],
                 ),
               ),
               child: SizedBox(

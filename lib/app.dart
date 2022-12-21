@@ -17,7 +17,8 @@ class App extends StatelessWidget {
       ],
       supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        useMaterial3: true,
+        colorSchemeSeed: const Color(0xFFff8046),
       ),
       home: const GalleryPage(),
     );
