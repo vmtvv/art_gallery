@@ -2,11 +2,12 @@ import 'package:art_gallery/domain/domain.dart' as domain;
 import 'package:art_gallery/shared/shared.dart';
 import 'package:flutter/material.dart';
 
-class GalleryItem extends StatelessWidget {
+class GalleryListItem extends StatelessWidget {
   final domain.ArtObject artObject;
   final Function(domain.ArtObject) onTap;
 
-  const GalleryItem({Key? key, required this.artObject, required this.onTap})
+  const GalleryListItem(
+      {Key? key, required this.artObject, required this.onTap})
       : super(key: key);
 
   @override
