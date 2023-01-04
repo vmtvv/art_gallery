@@ -4,6 +4,7 @@ class GalleryState extends Equatable {
   const GalleryState({
     required this.status,
     this.century,
+    this.involvedMaker,
     this.artObjects = const <ArtObject>[],
     this.maxCount = 0,
     this.page = 0,
@@ -13,6 +14,7 @@ class GalleryState extends Equatable {
 
   final GalleryStatus status;
   final int? century;
+  final String? involvedMaker;
   final List<ArtObject> artObjects;
   final int maxCount;
   final int page;
@@ -22,6 +24,7 @@ class GalleryState extends Equatable {
   GalleryState copyWith({
     GalleryStatus? status,
     int? century,
+    String? involvedMaker,
     List<ArtObject>? artObjects,
     int? maxCount,
     int? page,
@@ -30,7 +33,8 @@ class GalleryState extends Equatable {
   }) {
     return GalleryState(
       status: status ?? this.status,
-      century: century,
+      century: century ?? this.century,
+      involvedMaker: involvedMaker ?? this.involvedMaker,
       artObjects: artObjects ?? this.artObjects,
       maxCount: maxCount ?? this.maxCount,
       page: page ?? this.page,
@@ -44,8 +48,9 @@ class GalleryState extends Equatable {
   @override
   List<Object?> get props => [
         status,
-        artObjects,
         century,
+        involvedMaker,
+        artObjects,
         page,
         sorting,
         imgOnly,

@@ -7,19 +7,19 @@ abstract class GalleryEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class GalleryCenturySelected extends GalleryEvent {
-  const GalleryCenturySelected({
-    required this.century,
-    this.sorting,
-    this.imgOnly,
-  });
-
-  final int century;
-  final ArtCollectionSorting? sorting;
-  final bool? imgOnly;
-
-  @override
-  List<Object?> get props => [century, sorting, imgOnly];
+class GalleryFetched extends GalleryEvent {
+  const GalleryFetched();
 }
 
-class GalleryFetched extends GalleryEvent {}
+class GalleryFilterChanged extends GalleryEvent {
+  const GalleryFilterChanged({
+    this.century,
+    this.involvedMaker,
+  });
+
+  final int? century;
+  final String? involvedMaker;
+
+  @override
+  List<Object?> get props => [century, involvedMaker];
+}
