@@ -38,22 +38,27 @@ class _GalleryListState extends State<GalleryList> {
     }
     return SafeArea(
       bottom: false,
-      child: ListView.builder(
-        itemBuilder: (BuildContext context, int index) {
-          return index >= widget.artObjects.length
-              ? Container(
-                  margin: const EdgeInsets.only(top: 16),
-                  child: const ActivityIndicator(size: 24, strokeWidth: 1.5),
-                )
-              : GalleryListItem(
-                  artObject: widget.artObjects[index],
-                  onTap: widget.onItemTap,
-                );
-        },
-        itemCount: widget.hasReachedMax
-            ? widget.artObjects.length
-            : widget.artObjects.length + 1,
-        controller: _scrollController,
+      child: Stack(
+        children: [
+          ListView.builder(
+            itemBuilder: (BuildContext context, int index) {
+              return index >= widget.artObjects.length
+                  ? Container(
+                      margin: const EdgeInsets.only(top: 16),
+                      child:
+                          const ActivityIndicator(size: 24, strokeWidth: 1.5),
+                    )
+                  : GalleryListItem(
+                      artObject: widget.artObjects[index],
+                      onTap: widget.onItemTap,
+                    );
+            },
+            itemCount: widget.hasReachedMax
+                ? widget.artObjects.length
+                : widget.artObjects.length + 1,
+            controller: _scrollController,
+          ),
+        ],
       ),
     );
   }
@@ -68,7 +73,7 @@ class _GalleryListState extends State<GalleryList> {
 
   void _onScroll() {
     if (_isBottom) {
-      context.read<GalleryBloc>().add(GalleryFetched());
+      context.read<GalleryBloc>().add(const GalleryFetched());
     }
   }
 
