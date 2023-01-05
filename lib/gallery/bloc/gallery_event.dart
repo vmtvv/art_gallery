@@ -12,14 +12,10 @@ class GalleryFetched extends GalleryEvent {
 }
 
 class GalleryFilterChanged extends GalleryEvent {
-  const GalleryFilterChanged({
-    this.century,
-    this.involvedMaker,
-  });
+  const GalleryFilterChanged({required this.filter});
 
-  final int? century;
-  final String? involvedMaker;
+  final ArtCollectionFilter filter;
 
   @override
-  List<Object?> get props => [century, involvedMaker];
+  List<Object?> get props => [filter];
 }

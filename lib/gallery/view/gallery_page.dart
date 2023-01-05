@@ -22,7 +22,7 @@ class GalleryPage extends StatelessWidget {
           create: (context) => GalleryBloc(
               artCollectionRepository:
                   RepositoryProvider.of<ArtCollectionRepository>(context))
-            ..add(const GalleryFilterChanged()),
+            ..add(const GalleryFilterChanged(filter: ArtCollectionFilter())),
         ),
         BlocProvider(
           create: (context) => GalleryFilterBloc(

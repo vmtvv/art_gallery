@@ -45,19 +45,22 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
     Emitter<GalleryState> emit,
   ) async {
     try {
-      emit(state.copyWith(status: GalleryStatus.loading));
+      emit(
+        state.copyWith(
+          status: GalleryStatus.loading,
+          filter: event.filter,
+        ),
+      );
       var page = 1;
       final artCollection = await _getArtCollection(
-        century: event.century,
-        involvedMaker: event.involvedMaker,
+        century: event.filter.century,
+        involvedMaker: event.filter.involvedMaker,
         page: page,
         countPerPage: _countPerPage,
       );
       return emit(
         state.copyWith(
           status: GalleryStatus.success,
-          century: event.century,
-          involvedMaker: event.involvedMaker,
           artObjects: artCollection.artObjects,
           maxCount: artCollection.count,
           page: page,
@@ -76,12 +79,12 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
       if (state.hasReachedMax) return;
       final page = state.page + 1;
       final artCollection = await _getArtCollection(
-        century: state.century,
-        involvedMaker: state.involvedMaker,
+        century: state.filter.century,
+        involvedMaker: state.filter.involvedMaker,
         page: page,
         countPerPage: _countPerPage,
-        sorting: state.sorting,
-        imgOnly: state.imgOnly,
+        sorting: state.filter.sorting,
+        imgOnly: state.filter.imgOnly,
       );
       artCollection.artObjects.isEmpty
           ? emit(state.copyWith(page: page))
