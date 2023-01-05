@@ -1,3 +1,4 @@
+import 'package:art_gallery/domain/art_collection/art_collection.dart';
 import 'package:art_gallery/gallery/gallery.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,8 +35,8 @@ class GalleryFilterBloc extends Bloc<GalleryFilterEvent, GalleryFilterState> {
     emit(
       GalleryFilterState(
         status: GalleryFilterStatus.clean,
-        century: _galleryBloc.state.century,
-        involvedMaker: _galleryBloc.state.involvedMaker,
+        century: _galleryBloc.state.filter.century,
+        involvedMaker: _galleryBloc.state.filter.involvedMaker,
       ),
     );
   }
@@ -74,8 +75,10 @@ class GalleryFilterBloc extends Bloc<GalleryFilterEvent, GalleryFilterState> {
       ),
     );
     _galleryBloc.add(GalleryFilterChanged(
-      century: state.century,
-      involvedMaker: state.involvedMaker,
+      filter: ArtCollectionFilter(
+        century: state.century,
+        involvedMaker: state.involvedMaker,
+      ),
     ));
   }
 }
