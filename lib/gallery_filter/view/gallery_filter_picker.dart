@@ -30,6 +30,8 @@ class GalleryFilterPickerState extends State<GalleryFilterPicker> {
 
   @override
   Widget build(BuildContext context) {
+    _involvedMakerController.text =
+        context.read<GalleryFilterBloc>().state.involvedMaker ?? '';
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).backgroundColor,
@@ -50,68 +52,66 @@ class GalleryFilterPickerState extends State<GalleryFilterPicker> {
           SingleChildScrollView(
             child: SizedBox(
               height: GalleryFilterPicker.height,
-              child: BlocBuilder<GalleryFilterBloc, GalleryFilterState>(
-                builder: (context, state) {
-                  _involvedMakerController.text = state.involvedMaker ?? '';
-                  return Container(
-                    margin: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              child: Container(
+                margin: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      AppLocalizations.of(context)!.gallery_filter_title,
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                    const SizedBox(height: 32),
+                    Row(
                       children: [
                         Text(
-                          AppLocalizations.of(context)!.gallery_filter_title,
-                          style: const TextStyle(fontSize: 18),
+                          AppLocalizations.of(context)!
+                              .gallery_filter_century_label,
+                          style: const TextStyle(fontSize: 12),
                         ),
-                        const SizedBox(height: 32),
-                        Row(
-                          children: [
-                            Text(
-                              AppLocalizations.of(context)!
-                                  .gallery_filter_century_label,
-                              style: const TextStyle(fontSize: 12),
-                            ),
-                            const SizedBox(width: 8),
-                            DropdownButton<int?>(
-                              value: state.century,
-                              items: [
-                                const DropdownMenuItem(
-                                  value: null,
-                                  child: Text(''),
+                        const SizedBox(width: 8),
+                        BlocBuilder<GalleryFilterBloc, GalleryFilterState>(
+                            builder: (context, state) {
+                          return DropdownButton<int?>(
+                            value: state.century,
+                            items: [
+                              const DropdownMenuItem(
+                                value: null,
+                                child: Text(''),
+                              ),
+                              for (int i = 1; i <= 21; i++)
+                                DropdownMenuItem(
+                                  value: i,
+                                  child: Text('$i'),
                                 ),
-                                for (int i = 1; i <= 21; i++)
-                                  DropdownMenuItem(
-                                    value: i,
-                                    child: Text('$i'),
-                                  ),
-                              ],
-                              onChanged: (item) => context
-                                  .read<GalleryFilterBloc>()
-                                  .add(GalleryFilterCenturyChanged(item)),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        TextField(
-                          controller: _involvedMakerController,
-                          decoration: InputDecoration(
-                              border: const OutlineInputBorder(),
-                              labelText: AppLocalizations.of(context)!
-                                  .gallery_filter_involved_maker_label),
-                          onChanged: (value) => context
-                              .read<GalleryFilterBloc>()
-                              .add(GalleryFilterInvolvedMakerChanged(value)),
-                        ),
-                        const SizedBox(height: 32),
-                        ElevatedButton(
-                            onPressed: (() => context
+                            ],
+                            onChanged: (item) => context
                                 .read<GalleryFilterBloc>()
-                                .add(const GalleryFilterApplied())),
-                            child: Text(AppLocalizations.of(context)!
-                                .gallery_filter_apply_button)),
+                                .add(GalleryFilterCenturyChanged(item)),
+                          );
+                        }),
                       ],
                     ),
-                  );
-                },
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _involvedMakerController,
+                      decoration: InputDecoration(
+                          border: const OutlineInputBorder(),
+                          labelText: AppLocalizations.of(context)!
+                              .gallery_filter_involved_maker_label),
+                      onChanged: (value) => context
+                          .read<GalleryFilterBloc>()
+                          .add(GalleryFilterInvolvedMakerChanged(value)),
+                    ),
+                    const SizedBox(height: 32),
+                    ElevatedButton(
+                        onPressed: (() => context
+                            .read<GalleryFilterBloc>()
+                            .add(const GalleryFilterApplied())),
+                        child: Text(AppLocalizations.of(context)!
+                            .gallery_filter_apply_button)),
+                  ],
+                ),
               ),
             ),
           ),

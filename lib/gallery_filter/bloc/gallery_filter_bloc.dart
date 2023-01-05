@@ -32,7 +32,7 @@ class GalleryFilterBloc extends Bloc<GalleryFilterEvent, GalleryFilterState> {
     Emitter<GalleryFilterState> emit,
   ) {
     emit(
-      state.copyWith(
+      GalleryFilterState(
         status: GalleryFilterStatus.clean,
         century: _galleryBloc.state.century,
         involvedMaker: _galleryBloc.state.involvedMaker,
