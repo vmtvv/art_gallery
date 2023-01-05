@@ -11,7 +11,6 @@ class GalleryFilterChips extends StatelessWidget {
     return SizedBox(
       height: 56,
       child: Container(
-        color: Theme.of(context).backgroundColor,
         padding: const EdgeInsets.all(8),
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
@@ -25,12 +24,9 @@ class GalleryFilterChips extends StatelessWidget {
                 onPressed: onFilterPickerToggle,
               );
             }
-            return Container(
-              margin: const EdgeInsets.only(left: 8),
-              child: InputChip(
-                label: Text('$index'),
-                onDeleted: () {},
-              ),
+            return InputChip(
+              label: Text('$index'),
+              onDeleted: () {},
             );
           },
         ),
