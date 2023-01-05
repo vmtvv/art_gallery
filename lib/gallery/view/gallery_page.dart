@@ -56,6 +56,19 @@ class GalleryViewState extends State<GalleryView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.appTitle),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(48.0),
+          child: GalleryFilterChips(onFilterPickerToggle: () {
+            if (!_filterPickerDisplayed) {
+              context
+                  .read<GalleryFilterBloc>()
+                  .add(const GalleryFilterInitializationRequested());
+            }
+            setState(() {
+              _filterPickerDisplayed = !_filterPickerDisplayed;
+            });
+          }),
+        ),
       ),
       body: LayoutBuilder(builder: (context, constraints) {
         return Stack(
@@ -82,16 +95,6 @@ class GalleryViewState extends State<GalleryView> {
               },
             ),
             _buildFilterPicker(constraints.maxHeight),
-            GalleryFilterChips(onFilterPickerToggle: () {
-              if (!_filterPickerDisplayed) {
-                context
-                    .read<GalleryFilterBloc>()
-                    .add(const GalleryFilterInitializationRequested());
-              }
-              setState(() {
-                _filterPickerDisplayed = !_filterPickerDisplayed;
-              });
-            }),
           ],
         );
       }),
