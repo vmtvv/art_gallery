@@ -55,7 +55,15 @@ class GalleryFilterPickerState extends State<GalleryFilterPicker> {
                       const SizedBox(height: 32),
                       const InvolvedMakerInput(),
                       const SizedBox(height: 24),
-                      const CenturyInput(),
+                      Row(
+                        children: const [
+                          CenturyInput(),
+                          SizedBox(width: 16),
+                          Expanded(
+                            child: HasImageSelector(),
+                          ),
+                        ],
+                      ),
                       const SizedBox(height: 32),
                       ElevatedButton(
                           onPressed: (() => context

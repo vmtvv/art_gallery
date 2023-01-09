@@ -55,6 +55,7 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
       final artCollection = await _getArtCollection(
         century: event.filter.century?.value,
         involvedMaker: event.filter.involvedMaker,
+        imgOnly: event.filter.imgOnly,
         page: page,
         countPerPage: _countPerPage,
       );

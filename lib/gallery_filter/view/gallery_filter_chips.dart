@@ -53,6 +53,21 @@ class GalleryFilterChips extends StatelessWidget {
                       },
                     ),
                   ),
+                if (state.filter.imgOnly)
+                  Container(
+                    margin: const EdgeInsets.only(left: 8),
+                    child: InputChip(
+                      label: Text(AppLocalizations.of(context)!
+                          .gallery_filter_has_image_label),
+                      onDeleted: () {
+                        context.read<GalleryBloc>().add(
+                              GalleryFilterChanged(
+                                filter: state.filter.withImgOnly(false),
+                              ),
+                            );
+                      },
+                    ),
+                  ),
               ],
             );
           },

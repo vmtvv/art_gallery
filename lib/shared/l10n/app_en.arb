@@ -16,5 +16,6 @@
   "gallery_filter_title": "FILTER SETTINGS",
   "gallery_filter_century_label": "Century",
   "gallery_filter_involved_maker_label": "Involved maker",
+  "gallery_filter_has_image_label": "Has image",
   "gallery_filter_apply_button": "apply"
 }
