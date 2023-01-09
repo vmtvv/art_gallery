@@ -29,7 +29,7 @@ class GalleryFilterChips extends StatelessWidget {
                   Container(
                     margin: const EdgeInsets.only(left: 8),
                     child: InputChip(
-                      label: Text(state.filter.century.toString()),
+                      label: Text(state.filter.century!.name),
                       onDeleted: () {
                         context.read<GalleryBloc>().add(
                               GalleryFilterChanged(

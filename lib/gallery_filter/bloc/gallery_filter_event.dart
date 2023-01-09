@@ -10,7 +10,7 @@ abstract class GalleryFilterEvent extends Equatable {
 class GalleryFilterCenturyChanged extends GalleryFilterEvent {
   const GalleryFilterCenturyChanged(this.century);
 
-  final int? century;
+  final ArtCollectionCentury? century;
 
   @override
   List<Object?> get props => [century];
@@ -27,10 +27,6 @@ class GalleryFilterInvolvedMakerChanged extends GalleryFilterEvent {
 
 class GalleryFilterInitializationRequested extends GalleryFilterEvent {
   const GalleryFilterInitializationRequested();
-}
-
-class GalleryFilterCleanupRequested extends GalleryFilterEvent {
-  const GalleryFilterCleanupRequested();
 }
 
 class GalleryFilterApplied extends GalleryFilterEvent {

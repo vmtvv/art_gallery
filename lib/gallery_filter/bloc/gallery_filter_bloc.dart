@@ -1,4 +1,5 @@
 import 'package:art_gallery/domain/art_collection/art_collection.dart';
+import 'package:art_gallery/domain/art_collection/models/art_collection_century.dart';
 import 'package:art_gallery/gallery/gallery.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,7 +12,7 @@ enum GalleryFilterStatus { clean, changed, applied }
 class GalleryFilterBloc extends Bloc<GalleryFilterEvent, GalleryFilterState> {
   GalleryFilterBloc({
     required GalleryBloc galleryBloc,
-    int? initialCentury,
+    ArtCollectionCentury? initialCentury,
     String? initialMaker,
   })  : _galleryBloc = galleryBloc,
         super(GalleryFilterState(
@@ -46,9 +47,10 @@ class GalleryFilterBloc extends Bloc<GalleryFilterEvent, GalleryFilterState> {
     Emitter<GalleryFilterState> emit,
   ) {
     emit(
-      state.copyWith(
+      GalleryFilterState(
         status: GalleryFilterStatus.changed,
         century: event.century,
+        involvedMaker: state.involvedMaker,
       ),
     );
   }
@@ -57,10 +59,13 @@ class GalleryFilterBloc extends Bloc<GalleryFilterEvent, GalleryFilterState> {
     GalleryFilterInvolvedMakerChanged event,
     Emitter<GalleryFilterState> emit,
   ) {
+    final involvedMaker =
+        event.involvedMaker?.isEmpty ?? false ? null : event.involvedMaker;
     emit(
-      state.copyWith(
+      GalleryFilterState(
         status: GalleryFilterStatus.changed,
-        involvedMaker: event.involvedMaker,
+        century: state.century,
+        involvedMaker: involvedMaker,
       ),
     );
   }

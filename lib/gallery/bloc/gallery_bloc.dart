@@ -53,7 +53,7 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
       );
       var page = 1;
       final artCollection = await _getArtCollection(
-        century: event.filter.century,
+        century: event.filter.century?.value,
         involvedMaker: event.filter.involvedMaker,
         page: page,
         countPerPage: _countPerPage,
@@ -79,7 +79,7 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
       if (state.hasReachedMax) return;
       final page = state.page + 1;
       final artCollection = await _getArtCollection(
-        century: state.filter.century,
+        century: state.filter.century?.value,
         involvedMaker: state.filter.involvedMaker,
         page: page,
         countPerPage: _countPerPage,

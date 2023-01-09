@@ -8,12 +8,12 @@ class GalleryFilterState extends Equatable {
   });
 
   final GalleryFilterStatus status;
-  final int? century;
+  final ArtCollectionCentury? century;
   final String? involvedMaker;
 
   GalleryFilterState copyWith({
     GalleryFilterStatus? status,
-    int? century,
+    ArtCollectionCentury? century,
     String? involvedMaker,
   }) {
     return GalleryFilterState(

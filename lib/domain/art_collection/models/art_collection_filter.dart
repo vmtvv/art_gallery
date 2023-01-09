@@ -8,12 +8,12 @@ class ArtCollectionFilter {
     this.sorting,
   });
 
-  final int? century;
+  final ArtCollectionCentury? century;
   final String? involvedMaker;
   final bool? imgOnly;
   final ArtCollectionSorting? sorting;
 
-  ArtCollectionFilter withCentury(int? century) {
+  ArtCollectionFilter withCentury(ArtCollectionCentury? century) {
     return ArtCollectionFilter(
         century: century,
         involvedMaker: involvedMaker,
