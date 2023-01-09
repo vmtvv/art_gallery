@@ -25,6 +25,15 @@ class GalleryFilterInvolvedMakerChanged extends GalleryFilterEvent {
   List<Object?> get props => [involvedMaker];
 }
 
+class GalleryFilterHasImageChanged extends GalleryFilterEvent {
+  const GalleryFilterHasImageChanged(this.hasImage);
+
+  final bool hasImage;
+
+  @override
+  List<Object?> get props => [hasImage];
+}
+
 class GalleryFilterInitializationRequested extends GalleryFilterEvent {
   const GalleryFilterInitializationRequested();
 }

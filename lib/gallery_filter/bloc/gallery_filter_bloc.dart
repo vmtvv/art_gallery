@@ -1,5 +1,4 @@
 import 'package:art_gallery/domain/art_collection/art_collection.dart';
-import 'package:art_gallery/domain/art_collection/models/art_collection_century.dart';
 import 'package:art_gallery/gallery/gallery.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,6 +23,7 @@ class GalleryFilterBloc extends Bloc<GalleryFilterEvent, GalleryFilterState> {
         _onGalleryFilterInitializationRequested);
     on<GalleryFilterCenturyChanged>(_onGalleryFilterCenturyChanged);
     on<GalleryFilterInvolvedMakerChanged>(_onGalleryFilterInvolvedMakerChanged);
+    on<GalleryFilterHasImageChanged>(_onGalleryFilterHasImageChanged);
     on<GalleryFilterApplied>(_onGalleryFilterApplied);
   }
 
@@ -38,6 +38,7 @@ class GalleryFilterBloc extends Bloc<GalleryFilterEvent, GalleryFilterState> {
         status: GalleryFilterStatus.clean,
         century: _galleryBloc.state.filter.century,
         involvedMaker: _galleryBloc.state.filter.involvedMaker,
+        hasImage: _galleryBloc.state.filter.imgOnly,
       ),
     );
   }
@@ -70,6 +71,18 @@ class GalleryFilterBloc extends Bloc<GalleryFilterEvent, GalleryFilterState> {
     );
   }
 
+  void _onGalleryFilterHasImageChanged(
+    GalleryFilterHasImageChanged event,
+    Emitter<GalleryFilterState> emit,
+  ) {
+    emit(
+      state.copyWith(
+        status: GalleryFilterStatus.changed,
+        hasImage: event.hasImage,
+      ),
+    );
+  }
+
   void _onGalleryFilterApplied(
     GalleryFilterApplied event,
     Emitter<GalleryFilterState> emit,
@@ -83,6 +96,7 @@ class GalleryFilterBloc extends Bloc<GalleryFilterEvent, GalleryFilterState> {
       filter: ArtCollectionFilter(
         century: state.century,
         involvedMaker: state.involvedMaker,
+        imgOnly: state.hasImage,
       ),
     ));
   }
