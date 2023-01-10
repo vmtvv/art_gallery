@@ -52,6 +52,7 @@ class GalleryFilterBloc extends Bloc<GalleryFilterEvent, GalleryFilterState> {
         status: GalleryFilterStatus.changed,
         century: event.century,
         involvedMaker: state.involvedMaker,
+        hasImage: state.hasImage,
       ),
     );
   }
@@ -67,6 +68,7 @@ class GalleryFilterBloc extends Bloc<GalleryFilterEvent, GalleryFilterState> {
         status: GalleryFilterStatus.changed,
         century: state.century,
         involvedMaker: involvedMaker,
+        hasImage: state.hasImage,
       ),
     );
   }
