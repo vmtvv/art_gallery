@@ -124,5 +124,17 @@ void main() {
       await tester.pumpWidget(buildSubject());
       expect(find.byType(RetryView), findsOneWidget);
     });
+
+    testWidgets('renders GalleryFilterChips', (tester) async {
+      when(() => galleryBloc.state)
+          .thenReturn(const GalleryState(status: GalleryStatus.initial));
+      when(() => galleryFilterBloc.state).thenReturn(
+          const GalleryFilterState(status: GalleryFilterStatus.clean));
+      await tester.pumpWidget(buildSubject());
+      expect(
+        find.byType(GalleryFilterChips),
+        findsOneWidget,
+      );
+    });
   });
 }
