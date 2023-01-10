@@ -1,6 +1,7 @@
 import 'package:art_gallery/art_details/art_details.dart';
 import 'package:art_gallery/domain/domain.dart' as domain;
 import 'package:art_gallery/gallery/gallery.dart';
+import 'package:art_gallery/gallery_filter/gallery_filter.dart';
 import 'package:art_gallery/shared/shared.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,10 @@ class MockArtCollectionRepository extends Mock
 class MockGalleryBloc extends MockBloc<GalleryEvent, GalleryState>
     implements GalleryBloc {}
 
+class MockGalleryFilterBloc
+    extends MockBloc<GalleryFilterEvent, GalleryFilterState>
+    implements GalleryFilterBloc {}
+
 class MockArtDetailsBloc extends MockBloc<ArtDetailsEvent, ArtDetailsState>
     implements ArtDetailsBloc {}
 
@@ -26,11 +31,13 @@ void main() {
   late AppLogger appLogger;
   late domain.ArtCollectionRepository artCollectionRepository;
   late GalleryBloc galleryBloc;
+  late GalleryFilterBloc galleryFilterBloc;
 
   setUp(() {
     appLogger = MockAppLogger();
     artCollectionRepository = MockArtCollectionRepository();
     galleryBloc = MockGalleryBloc();
+    galleryFilterBloc = MockGalleryFilterBloc();
   });
 
   group('GalleryPage', () {
@@ -71,8 +78,11 @@ void main() {
     ];
 
     Widget buildSubject() {
-      return BlocProvider.value(
-        value: galleryBloc,
+      return MultiBlocProvider(
+        providers: [
+          BlocProvider.value(value: galleryBloc),
+          BlocProvider.value(value: galleryFilterBloc),
+        ],
         child: wrapWithMaterialApp(
           const GalleryView(),
         ),
@@ -83,6 +93,8 @@ void main() {
         (tester) async {
       when(() => galleryBloc.state)
           .thenReturn(const GalleryState(status: GalleryStatus.initial));
+      when(() => galleryFilterBloc.state).thenReturn(
+          const GalleryFilterState(status: GalleryFilterStatus.clean));
       await tester.pumpWidget(buildSubject());
       expect(find.byType(ActivityIndicator), findsOneWidget);
     });
@@ -95,6 +107,8 @@ void main() {
           artObjects: mockArtObjects,
         ),
       );
+      when(() => galleryFilterBloc.state).thenReturn(
+          const GalleryFilterState(status: GalleryFilterStatus.clean));
       await tester.pumpWidget(buildSubject());
       expect(find.byType(GalleryList), findsOneWidget);
     });
@@ -105,6 +119,8 @@ void main() {
           status: GalleryStatus.failure,
         ),
       );
+      when(() => galleryFilterBloc.state).thenReturn(
+          const GalleryFilterState(status: GalleryFilterStatus.clean));
       await tester.pumpWidget(buildSubject());
       expect(find.byType(RetryView), findsOneWidget);
     });
