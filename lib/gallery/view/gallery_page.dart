@@ -119,11 +119,8 @@ class GalleryViewState extends State<GalleryView> {
     return AnimatedPositioned(
       top: _filterPickerPosition,
       duration: GalleryFilterPicker.transitionDuration,
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        child: GalleryFilterPicker(
-          onClose: _toggleFilterPickerVisibility,
-        ),
+      child: GalleryFilterPicker(
+        onClose: _toggleFilterPickerVisibility,
       ),
     );
   }
