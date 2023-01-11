@@ -1,5 +1,4 @@
 import 'package:art_gallery/gallery_filter/gallery_filter.dart';
-import 'package:art_gallery/gallery_filter/view/century_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,12 +36,13 @@ class GalleryFilterPickerState extends State<GalleryFilterPicker> {
           ),
         ],
       ),
-      child: Stack(
-        children: [
-          SingleChildScrollView(
-            child: SafeArea(
-              child: SizedBox(
-                height: GalleryFilterPicker.height,
+      child: SizedBox(
+        height: GalleryFilterPicker.height,
+        width: MediaQuery.of(context).size.width,
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              child: SafeArea(
                 child: Container(
                   margin: const EdgeInsets.all(16),
                   child: Column(
@@ -57,7 +57,9 @@ class GalleryFilterPickerState extends State<GalleryFilterPicker> {
                       const SizedBox(height: 24),
                       Row(
                         children: const [
-                          CenturyInput(),
+                          Expanded(
+                            child: CenturyInput(),
+                          ),
                           SizedBox(width: 16),
                           Expanded(
                             child: HasImageSelector(),
@@ -76,15 +78,15 @@ class GalleryFilterPickerState extends State<GalleryFilterPicker> {
                 ),
               ),
             ),
-          ),
-          Align(
-            alignment: Alignment.topRight,
-            child: IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: widget.onClose,
+            Align(
+              alignment: Alignment.topRight,
+              child: IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: widget.onClose,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
