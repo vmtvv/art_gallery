@@ -41,17 +41,58 @@ void main() {
   });
 
   group('GalleryPage', () {
+    Widget buildSubject() {
+      return MultiProvider(
+        providers: [
+          Provider.value(value: appLogger),
+          RepositoryProvider.value(value: artCollectionRepository),
+        ],
+        child: wrapWithMaterialApp(const GalleryPage()),
+      );
+    }
+
     testWidgets('renders GalleryView', (tester) async {
-      await tester.pumpWidget(
-        MultiProvider(
-          providers: [
-            Provider.value(value: appLogger),
-            RepositoryProvider.value(value: artCollectionRepository),
-          ],
-          child: wrapWithMaterialApp(const GalleryPage()),
+      await tester.pumpWidget(buildSubject());
+      expect(find.byType(GalleryView), findsOneWidget);
+    });
+
+    testWidgets('renders GalleryFilterChips', (tester) async {
+      when(() => galleryBloc.state)
+          .thenReturn(const GalleryState(status: GalleryStatus.initial));
+      when(() => galleryFilterBloc.state).thenReturn(
+          const GalleryFilterState(status: GalleryFilterStatus.clean));
+      await tester.pumpWidget(buildSubject());
+      expect(find.byType(GalleryFilterChips), findsOneWidget);
+    });
+
+    testWidgets('does not display GalleryFilterPicker by default',
+        (tester) async {
+      when(() => galleryBloc.state)
+          .thenReturn(const GalleryState(status: GalleryStatus.initial));
+      when(() => galleryFilterBloc.state).thenReturn(
+          const GalleryFilterState(status: GalleryFilterStatus.clean));
+      await tester.pumpWidget(buildSubject());
+      expect(find.byType(GalleryFilterPicker).hitTestable(), findsNothing);
+    });
+
+    testWidgets('displays GalleryFilterPicker when click on the filter button',
+        (tester) async {
+      when(() => galleryBloc.state)
+          .thenReturn(const GalleryState(status: GalleryStatus.initial));
+      when(() => galleryFilterBloc.state).thenReturn(
+          const GalleryFilterState(status: GalleryFilterStatus.clean));
+
+      await tester.pumpWidget(buildSubject());
+
+      await tester.tap(
+        find.descendant(
+          of: find.byType(GalleryFilterChips),
+          matching: find.byType(ActionChip),
         ),
       );
-      expect(find.byType(GalleryView), findsOneWidget);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(GalleryFilterPicker).hitTestable(), findsOneWidget);
     });
   });
 
@@ -123,18 +164,6 @@ void main() {
           const GalleryFilterState(status: GalleryFilterStatus.clean));
       await tester.pumpWidget(buildSubject());
       expect(find.byType(RetryView), findsOneWidget);
-    });
-
-    testWidgets('renders GalleryFilterChips', (tester) async {
-      when(() => galleryBloc.state)
-          .thenReturn(const GalleryState(status: GalleryStatus.initial));
-      when(() => galleryFilterBloc.state).thenReturn(
-          const GalleryFilterState(status: GalleryFilterStatus.clean));
-      await tester.pumpWidget(buildSubject());
-      expect(
-        find.byType(GalleryFilterChips),
-        findsOneWidget,
-      );
     });
   });
 }
