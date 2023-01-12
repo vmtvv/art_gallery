@@ -10,6 +10,11 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider<AppThemeNotifier>(
+          create: (_) => AppThemeNotifier(
+            theme: AppThemeConfiguration.dark,
+          ),
+        ),
         Provider.value(
           value: AppLogger(),
         ),
