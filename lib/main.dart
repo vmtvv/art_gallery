@@ -1,12 +1,15 @@
 import 'package:art_gallery/data/data.dart' as data;
 import 'package:art_gallery/app.dart';
 import 'package:art_gallery/domain/domain.dart' as domain;
+import 'package:art_gallery/preferences/preferences.dart';
 import 'package:art_gallery/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await LocalStorageService().initialize();
   runApp(
     MultiProvider(
       providers: [
@@ -25,7 +28,10 @@ void main() {
           ),
         ),
       ],
-      child: const App(),
+      child: BlocProvider(
+        create: (context) => PreferencesBloc(),
+        child: const App(),
+      ),
     ),
   );
 }

@@ -2,6 +2,7 @@ import 'package:art_gallery/art_details/art_details.dart';
 import 'package:art_gallery/domain/domain.dart';
 import 'package:art_gallery/gallery/gallery.dart';
 import 'package:art_gallery/gallery_filter/gallery_filter.dart';
+import 'package:art_gallery/preferences/view/preferences_page.dart';
 import 'package:art_gallery/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -56,6 +57,14 @@ class GalleryViewState extends State<GalleryView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.appTitle),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(context, PreferencesPage.route());
+            },
+            icon: const Icon(Icons.settings),
+          ),
+        ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(48.0),
           child: GalleryFilterChips(onFilterPickerToggle: () {
