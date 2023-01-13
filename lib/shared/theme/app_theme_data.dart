@@ -1,10 +1,10 @@
+import 'package:art_gallery/shared/theme/theme.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 enum AppThemeMode { light, dark }
 
 class AppThemeData {
-  final AppThemeMode mode;
-
   final Color primaryColor;
   final Color onPrimaryColor;
 
@@ -42,8 +42,7 @@ class AppThemeData {
   final Color dividerColor;
 
   AppThemeData(
-      {required this.mode,
-      required this.primaryColor,
+      {required this.primaryColor,
       required this.onPrimaryColor,
       required this.backgroundColor,
       required this.onBackgroundColor,
@@ -67,4 +66,31 @@ class AppThemeData {
       this.onHeroColor,
       this.miscColor,
       this.onMiscColor});
+
+  CupertinoThemeData getCupertino() {
+    return CupertinoThemeData(
+      primaryColor: primaryColor,
+      barBackgroundColor: surfaceColor,
+      scaffoldBackgroundColor: backgroundColor,
+      textTheme: CupertinoTextThemeData(
+        textStyle: AppThemeTextStyles.body1(onBackgroundColor),
+        actionTextStyle: AppThemeTextStyles.button(onSurfaceColor),
+      ),
+    );
+  }
+
+  ThemeData getMaterialLight() {
+    return ThemeData(
+      useMaterial3: true,
+      colorSchemeSeed: primaryColor,
+    );
+  }
+
+  ThemeData getMaterialDark() {
+    return ThemeData(
+      useMaterial3: true,
+      colorSchemeSeed: primaryColor,
+      brightness: Brightness.dark,
+    );
+  }
 }

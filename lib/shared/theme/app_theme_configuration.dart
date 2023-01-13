@@ -2,7 +2,6 @@ import 'package:art_gallery/shared/theme/theme.dart';
 
 class AppThemeConfiguration {
   static final light = AppThemeData(
-    mode: AppThemeMode.light,
     primaryColor: AppThemeColors.peach,
     onPrimaryColor: AppThemeColors.white,
     backgroundColor: AppThemeColors.white,
@@ -20,7 +19,6 @@ class AppThemeConfiguration {
   );
 
   static final dark = AppThemeData(
-    mode: AppThemeMode.dark,
     primaryColor: AppThemeColors.peach,
     onPrimaryColor: AppThemeColors.white,
     backgroundColor: AppThemeColors.ebony,
