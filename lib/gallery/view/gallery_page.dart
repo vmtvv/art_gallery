@@ -46,10 +46,6 @@ class GalleryView extends StatefulWidget {
 }
 
 class GalleryViewState extends State<GalleryView> {
-  late double _filterPickerMinimizedPosition;
-  late double _filterPickerMaximizedPosition;
-
-  double _filterPickerPosition = 0.0;
   bool _filterPickerDisplayed = false;
 
   @override
@@ -103,7 +99,15 @@ class GalleryViewState extends State<GalleryView> {
                 }
               },
             ),
-            _buildFilterPicker(constraints.maxHeight),
+            AnimatedPositioned(
+              top: _filterPickerDisplayed
+                  ? constraints.maxHeight - GalleryFilterPicker.height
+                  : constraints.maxHeight,
+              duration: GalleryFilterPicker.transitionDuration,
+              child: GalleryFilterPicker(
+                onClose: _toggleFilterPickerVisibility,
+              ),
+            ),
           ],
         );
       }),
@@ -118,35 +122,9 @@ class GalleryViewState extends State<GalleryView> {
     Navigator.push(context, ArtDetailsPage.route(arguments: arguments));
   }
 
-  Widget _buildFilterPicker(double maxHeight) {
-    _initializeOrderBarPositions(maxHeight);
-
-    _filterPickerPosition = _filterPickerDisplayed
-        ? _filterPickerMaximizedPosition
-        : _filterPickerMinimizedPosition;
-
-    return AnimatedPositioned(
-      top: _filterPickerPosition,
-      duration: GalleryFilterPicker.transitionDuration,
-      child: GalleryFilterPicker(
-        onClose: _toggleFilterPickerVisibility,
-      ),
-    );
-  }
-
-  void _initializeOrderBarPositions(double maxHeight) {
-    _filterPickerMinimizedPosition = maxHeight;
-    _filterPickerMaximizedPosition = maxHeight - GalleryFilterPicker.height;
-  }
-
   void _toggleFilterPickerVisibility() {
-    final position = _filterPickerDisplayed
-        ? _filterPickerMinimizedPosition
-        : _filterPickerMaximizedPosition;
-
     setState(() {
       _filterPickerDisplayed = !_filterPickerDisplayed;
-      _filterPickerPosition = position;
     });
   }
 }

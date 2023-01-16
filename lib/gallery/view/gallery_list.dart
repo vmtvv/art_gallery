@@ -24,12 +24,7 @@ class GalleryList extends StatefulWidget {
 
 class _GalleryListState extends State<GalleryList> {
   final _scrollController = ScrollController();
-
-  late double _bottomButtonHiddenPosition;
-  late double _bottomButtonVisiblePosition;
-
   bool _bottomButtonVisible = false;
-  double _bottomButtonPosition = 0.0;
 
   @override
   void initState() {
@@ -67,41 +62,26 @@ class _GalleryListState extends State<GalleryList> {
               controller: _scrollController,
             ),
           ),
-          _buildBottomButton(
-              context, constraints.maxHeight, constraints.maxWidth),
+          AnimatedPositioned(
+            top: _bottomButtonVisible
+                ? constraints.maxHeight - 80
+                : constraints.maxHeight,
+            duration: const Duration(milliseconds: 100),
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: Center(
+                child: ElevatedButton.icon(
+                  onPressed: _scrollTop,
+                  icon: const Icon(Icons.keyboard_arrow_up_rounded),
+                  label: Text(
+                      AppLocalizations.of(context)!.gallery_list_bottom_button),
+                ),
+              ),
+            ),
+          ),
         ],
       );
     });
-  }
-
-  Widget _buildBottomButton(
-      BuildContext context, double maxHeight, double maxWidth) {
-    _initializeBottomButtonPositions(maxHeight);
-
-    _bottomButtonPosition = _bottomButtonVisible
-        ? _bottomButtonVisiblePosition
-        : _bottomButtonHiddenPosition;
-
-    return AnimatedPositioned(
-      top: _bottomButtonPosition,
-      duration: const Duration(milliseconds: 100),
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        child: Center(
-          child: ElevatedButton.icon(
-            onPressed: _scrollTop,
-            icon: const Icon(Icons.keyboard_arrow_up_rounded),
-            label:
-                Text(AppLocalizations.of(context)!.gallery_list_bottom_button),
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _initializeBottomButtonPositions(double maxHeight) {
-    _bottomButtonHiddenPosition = maxHeight;
-    _bottomButtonVisiblePosition = maxHeight - 80;
   }
 
   @override
@@ -130,13 +110,8 @@ class _GalleryListState extends State<GalleryList> {
             ScrollDirection.forward;
 
     if (_bottomButtonVisible != bottomButtonVisibility) {
-      final position = _bottomButtonVisible
-          ? _bottomButtonVisiblePosition
-          : _bottomButtonHiddenPosition;
-
       setState(() {
         _bottomButtonVisible = bottomButtonVisibility;
-        _bottomButtonPosition = position;
       });
     }
   }
