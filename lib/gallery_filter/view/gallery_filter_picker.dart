@@ -70,9 +70,12 @@ class GalleryFilterPickerState extends State<GalleryFilterPicker> {
                       ),
                       const SizedBox(height: 32),
                       ElevatedButton(
-                          onPressed: (() => context
-                              .read<GalleryFilterBloc>()
-                              .add(const GalleryFilterApplied())),
+                          onPressed: () {
+                            context
+                                .read<GalleryFilterBloc>()
+                                .add(const GalleryFilterApplied());
+                            _close(context);
+                          },
                           child: Text(AppLocalizations.of(context)!
                               .gallery_filter_apply_button)),
                     ],
@@ -84,12 +87,16 @@ class GalleryFilterPickerState extends State<GalleryFilterPicker> {
               alignment: Alignment.topRight,
               child: IconButton(
                 icon: const Icon(Icons.close),
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => _close(context),
               ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  void _close(BuildContext context) {
+    Navigator.of(context).pop();
   }
 }
