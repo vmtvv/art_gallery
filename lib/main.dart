@@ -1,6 +1,8 @@
 import 'package:art_gallery/data/data.dart' as data;
 import 'package:art_gallery/app.dart';
 import 'package:art_gallery/domain/domain.dart' as domain;
+import 'package:art_gallery/gallery/gallery.dart';
+import 'package:art_gallery/gallery_filter/gallery_filter.dart';
 import 'package:art_gallery/preferences/preferences.dart';
 import 'package:art_gallery/shared/shared.dart';
 import 'package:flutter/material.dart';
@@ -28,8 +30,25 @@ void main() async {
           ),
         ),
       ],
-      child: BlocProvider(
-        create: (context) => PreferencesBloc(),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => PreferencesBloc(),
+          ),
+          BlocProvider(
+            create: (context) => GalleryBloc(
+                artCollectionRepository:
+                    RepositoryProvider.of<domain.ArtCollectionRepository>(
+                        context))
+              ..add(const GalleryFilterChanged(
+                  filter: domain.ArtCollectionFilter())),
+          ),
+          BlocProvider(
+            create: (context) => GalleryFilterBloc(
+                galleryBloc:
+                    BlocProvider.of<GalleryBloc>(context, listen: false)),
+          ),
+        ],
         child: const App(),
       ),
     ),
