@@ -4,13 +4,17 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class GalleryFilterPicker extends StatefulWidget {
-  const GalleryFilterPicker({Key? key, required this.onClose})
-      : super(key: key);
+  const GalleryFilterPicker({Key? key}) : super(key: key);
 
-  static const double height = 350;
-  static const Duration transitionDuration = Duration(milliseconds: 200);
-
-  final Function() onClose;
+  static void show(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return const GalleryFilterPicker();
+      },
+    );
+  }
 
   @override
   GalleryFilterPickerState createState() {
@@ -37,8 +41,8 @@ class GalleryFilterPickerState extends State<GalleryFilterPicker> {
         ],
       ),
       child: SizedBox(
-        height: GalleryFilterPicker.height,
         width: MediaQuery.of(context).size.width,
+        height: 350,
         child: Stack(
           children: [
             SingleChildScrollView(
@@ -82,7 +86,7 @@ class GalleryFilterPickerState extends State<GalleryFilterPicker> {
               alignment: Alignment.topRight,
               child: IconButton(
                 icon: const Icon(Icons.close),
-                onPressed: widget.onClose,
+                onPressed: () => Navigator.of(context).pop(),
               ),
             ),
           ],

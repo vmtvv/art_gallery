@@ -17,39 +17,6 @@ class GalleryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => GalleryBloc(
-              artCollectionRepository:
-                  RepositoryProvider.of<ArtCollectionRepository>(context))
-            ..add(const GalleryFilterChanged(filter: ArtCollectionFilter())),
-        ),
-        BlocProvider(
-          create: (context) => GalleryFilterBloc(
-              galleryBloc:
-                  BlocProvider.of<GalleryBloc>(context, listen: false)),
-        ),
-      ],
-      child: const GalleryView(),
-    );
-  }
-}
-
-class GalleryView extends StatefulWidget {
-  const GalleryView({super.key});
-
-  @override
-  GalleryViewState createState() {
-    return GalleryViewState();
-  }
-}
-
-class GalleryViewState extends State<GalleryView> {
-  bool _filterPickerDisplayed = false;
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.appTitle),
@@ -64,14 +31,10 @@ class GalleryViewState extends State<GalleryView> {
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(48.0),
           child: GalleryFilterChips(onFilterPickerToggle: () {
-            if (!_filterPickerDisplayed) {
-              context
-                  .read<GalleryFilterBloc>()
-                  .add(const GalleryFilterInitializationRequested());
-            }
-            setState(() {
-              _filterPickerDisplayed = !_filterPickerDisplayed;
-            });
+            context
+                .read<GalleryFilterBloc>()
+                .add(const GalleryFilterInitializationRequested());
+            GalleryFilterPicker.show(context);
           }),
         ),
       ),
@@ -91,7 +54,8 @@ class GalleryViewState extends State<GalleryView> {
                     return GalleryList(
                       artObjects: state.artObjects,
                       hasReachedMax: state.hasReachedMax,
-                      onItemTap: _navigateToArtObjectDetails,
+                      onItemTap: (item) =>
+                          _navigateToArtObjectDetails(context, item),
                     );
                   case GalleryStatus.initial:
                   case GalleryStatus.loading:
@@ -99,32 +63,17 @@ class GalleryViewState extends State<GalleryView> {
                 }
               },
             ),
-            AnimatedPositioned(
-              top: _filterPickerDisplayed
-                  ? constraints.maxHeight - GalleryFilterPicker.height
-                  : constraints.maxHeight,
-              duration: GalleryFilterPicker.transitionDuration,
-              child: GalleryFilterPicker(
-                onClose: _toggleFilterPickerVisibility,
-              ),
-            ),
           ],
         );
       }),
     );
   }
 
-  void _navigateToArtObjectDetails(ArtObject artObject) {
+  void _navigateToArtObjectDetails(BuildContext context, ArtObject artObject) {
     final arguments = ArtDetailsArguments(
         title: artObject.longTitle,
         number: artObject.number,
         image: artObject.image);
     Navigator.push(context, ArtDetailsPage.route(arguments: arguments));
-  }
-
-  void _toggleFilterPickerVisibility() {
-    setState(() {
-      _filterPickerDisplayed = !_filterPickerDisplayed;
-    });
   }
 }
