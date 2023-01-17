@@ -7,6 +7,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockingjay/mockingjay.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
 
@@ -38,65 +39,14 @@ void main() {
     artCollectionRepository = MockArtCollectionRepository();
     galleryBloc = MockGalleryBloc();
     galleryFilterBloc = MockGalleryFilterBloc();
+
+    when(() => galleryBloc.state)
+        .thenReturn(const GalleryState(status: GalleryStatus.initial));
+    when(() => galleryFilterBloc.state).thenReturn(
+        const GalleryFilterState(status: GalleryFilterStatus.clean));
   });
 
   group('GalleryPage', () {
-    Widget buildSubject() {
-      return MultiProvider(
-        providers: [
-          Provider.value(value: appLogger),
-          RepositoryProvider.value(value: artCollectionRepository),
-        ],
-        child: wrapWithMaterialApp(const GalleryPage()),
-      );
-    }
-
-    testWidgets('renders GalleryView', (tester) async {
-      await tester.pumpWidget(buildSubject());
-      expect(find.byType(GalleryView), findsOneWidget);
-    });
-
-    testWidgets('renders GalleryFilterChips', (tester) async {
-      when(() => galleryBloc.state)
-          .thenReturn(const GalleryState(status: GalleryStatus.initial));
-      when(() => galleryFilterBloc.state).thenReturn(
-          const GalleryFilterState(status: GalleryFilterStatus.clean));
-      await tester.pumpWidget(buildSubject());
-      expect(find.byType(GalleryFilterChips), findsOneWidget);
-    });
-
-    testWidgets('does not display GalleryFilterPicker by default',
-        (tester) async {
-      when(() => galleryBloc.state)
-          .thenReturn(const GalleryState(status: GalleryStatus.initial));
-      when(() => galleryFilterBloc.state).thenReturn(
-          const GalleryFilterState(status: GalleryFilterStatus.clean));
-      await tester.pumpWidget(buildSubject());
-      expect(find.byType(GalleryFilterPicker).hitTestable(), findsNothing);
-    });
-
-    testWidgets('displays GalleryFilterPicker when click on the filter button',
-        (tester) async {
-      when(() => galleryBloc.state)
-          .thenReturn(const GalleryState(status: GalleryStatus.initial));
-      when(() => galleryFilterBloc.state).thenReturn(
-          const GalleryFilterState(status: GalleryFilterStatus.clean));
-
-      await tester.pumpWidget(buildSubject());
-
-      await tester.tap(
-        find.descendant(
-          of: find.byType(GalleryFilterChips),
-          matching: find.byType(ActionChip),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(GalleryFilterPicker).hitTestable(), findsOneWidget);
-    });
-  });
-
-  group('GalleryView', () {
     final mockArtObjects = [
       domain.ArtObject(
         'id_test_1',
@@ -119,23 +69,48 @@ void main() {
     ];
 
     Widget buildSubject() {
-      return MultiBlocProvider(
+      return MultiProvider(
         providers: [
-          BlocProvider.value(value: galleryBloc),
-          BlocProvider.value(value: galleryFilterBloc),
+          Provider.value(value: appLogger),
+          RepositoryProvider.value(value: artCollectionRepository),
         ],
-        child: wrapWithMaterialApp(
-          const GalleryView(),
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider.value(value: galleryBloc),
+            BlocProvider.value(value: galleryFilterBloc)
+          ],
+          child: wrapWithMaterialApp(const GalleryPage()),
         ),
       );
     }
 
+    testWidgets('renders GalleryFilterChips', (tester) async {
+      await tester.pumpWidget(buildSubject());
+      expect(find.byType(GalleryFilterChips), findsOneWidget);
+    });
+
+    testWidgets('does not display GalleryFilterPicker by default',
+        (tester) async {
+      await tester.pumpWidget(buildSubject());
+      expect(find.byType(GalleryFilterPicker), findsNothing);
+    });
+
+    //Doesn't work while testing, needs to be investigated
+    testWidgets('displays GalleryFilterPicker when click on the filter button',
+        (tester) async {
+      await tester.pumpWidget(buildSubject());
+      await tester.tap(
+        find.descendant(
+          of: find.byType(GalleryFilterChips),
+          matching: find.byType(ActionChip),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(GalleryFilterPicker).hitTestable(), findsOneWidget);
+    });
+
     testWidgets('renders ActivityIndicator for GalleryStatus.initial',
         (tester) async {
-      when(() => galleryBloc.state)
-          .thenReturn(const GalleryState(status: GalleryStatus.initial));
-      when(() => galleryFilterBloc.state).thenReturn(
-          const GalleryFilterState(status: GalleryFilterStatus.clean));
       await tester.pumpWidget(buildSubject());
       expect(find.byType(ActivityIndicator), findsOneWidget);
     });
@@ -148,8 +123,6 @@ void main() {
           artObjects: mockArtObjects,
         ),
       );
-      when(() => galleryFilterBloc.state).thenReturn(
-          const GalleryFilterState(status: GalleryFilterStatus.clean));
       await tester.pumpWidget(buildSubject());
       expect(find.byType(GalleryList), findsOneWidget);
     });
@@ -160,8 +133,6 @@ void main() {
           status: GalleryStatus.failure,
         ),
       );
-      when(() => galleryFilterBloc.state).thenReturn(
-          const GalleryFilterState(status: GalleryFilterStatus.clean));
       await tester.pumpWidget(buildSubject());
       expect(find.byType(RetryView), findsOneWidget);
     });
