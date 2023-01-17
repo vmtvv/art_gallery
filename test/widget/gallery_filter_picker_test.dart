@@ -16,6 +16,9 @@ void main() {
 
   setUp(() {
     galleryFilterBloc = MockGalleryFilterBloc();
+
+    when(() => galleryFilterBloc.state).thenReturn(
+        const GalleryFilterState(status: GalleryFilterStatus.clean));
   });
 
   group('GalleryFilterPicker', () {
@@ -25,14 +28,12 @@ void main() {
           BlocProvider.value(value: galleryFilterBloc),
         ],
         child: wrapWithMaterialApp(
-          GalleryFilterPicker(onClose: () {}),
+          const GalleryFilterPicker(),
         ),
       );
     }
 
     testWidgets('renders input fields', (tester) async {
-      when(() => galleryFilterBloc.state).thenReturn(
-          const GalleryFilterState(status: GalleryFilterStatus.clean));
       await tester.pumpWidget(buildSubject());
       expect(find.byType(InvolvedMakerInput), findsOneWidget);
       expect(find.byType(CenturyInput), findsOneWidget);

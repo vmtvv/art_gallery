@@ -60,9 +60,9 @@ void main() {
 
     testWidgets('renders InputChip for applied century filter parameter',
         (tester) async {
-      final century = ArtCollectionCentury(10, 'X');
+      const century = ArtCollectionCentury(10, 'X');
       when(() => galleryBloc.state).thenReturn(
-        GalleryState(
+        const GalleryState(
           status: GalleryStatus.success,
           filter: ArtCollectionFilter(century: century),
         ),
@@ -91,13 +91,14 @@ void main() {
 
     testWidgets('renders three InputChips when all filter parameters applied',
         (tester) async {
-      final mockFilter = ArtCollectionFilter(
+      const mockFilter = ArtCollectionFilter(
         involvedMaker: 'Test',
         century: ArtCollectionCentury(20, 'XX'),
         imgOnly: true,
       );
+
       when(() => galleryBloc.state).thenReturn(
-        GalleryState(
+        const GalleryState(
           status: GalleryStatus.success,
           filter: mockFilter,
         ),

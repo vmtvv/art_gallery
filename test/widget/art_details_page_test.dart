@@ -36,16 +36,12 @@ void main() {
   late AppLogger appLogger;
   late domain.ArtCollectionRepository artCollectionRepository;
   late ArtDetailsBloc artDetailsBloc;
-  late MockNavigator navigator;
 
   setUp(() {
     appLogger = MockAppLogger();
     artCollectionRepository = MockArtCollectionRepository();
-
-    navigator = MockNavigator();
-    when(() => navigator.push<void>(any())).thenAnswer((_) async {});
-
     artDetailsBloc = MockArtDetailsBloc();
+
     when(() => artDetailsBloc.state).thenReturn(
       ArtDetailsState(
         status: ArtDetailsStatus.initial,
@@ -61,18 +57,14 @@ void main() {
         title: mockArtObjectDetails.longTitle,
         number: mockArtObjectDetails.number,
       );
-      return MockNavigatorProvider(
-        navigator: navigator,
-        child: MultiProvider(
-          providers: [
-            Provider.value(value: appLogger),
-            RepositoryProvider.value(value: artCollectionRepository),
-          ],
-          child: wrapWithMaterialApp(
-            Navigator(
-              onGenerateRoute: (_) =>
-                  ArtDetailsPage.route(arguments: arguments),
-            ),
+      return MultiProvider(
+        providers: [
+          Provider.value(value: appLogger),
+          RepositoryProvider.value(value: artCollectionRepository),
+        ],
+        child: wrapWithMaterialApp(
+          Navigator(
+            onGenerateRoute: (_) => ArtDetailsPage.route(arguments: arguments),
           ),
         ),
       );
@@ -87,21 +79,16 @@ void main() {
 
   group('ArtDetailsView', () {
     Widget buildSubject() {
-      return MockNavigatorProvider(
-        navigator: navigator,
-        child: BlocProvider.value(
-          value: artDetailsBloc,
-          child: wrapWithMaterialApp(
-            const ArtDetailsView(),
-          ),
+      return BlocProvider.value(
+        value: artDetailsBloc,
+        child: wrapWithMaterialApp(
+          const ArtDetailsView(),
         ),
       );
     }
 
     testWidgets('renders ActivityIndicator for ArtDetailsStatus.initial',
         (tester) async {
-      when(() => artDetailsBloc.state)
-          .thenReturn(const ArtDetailsState(status: ArtDetailsStatus.initial));
       await tester.pumpWidget(buildSubject());
       expect(find.byType(ActivityIndicator), findsOneWidget);
     });

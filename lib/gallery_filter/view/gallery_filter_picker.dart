@@ -10,9 +10,7 @@ class GalleryFilterPicker extends StatefulWidget {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      builder: (context) {
-        return const GalleryFilterPicker();
-      },
+      builder: (context) => const GalleryFilterPicker(),
     );
   }
 
