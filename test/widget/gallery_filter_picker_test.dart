@@ -28,7 +28,7 @@ void main() {
           BlocProvider.value(value: galleryFilterBloc),
         ],
         child: wrapWithMaterialApp(
-          const GalleryFilterPicker(),
+          GalleryFilterPicker(onClose: () {}),
         ),
       );
     }
