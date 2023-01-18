@@ -4,6 +4,7 @@ import 'package:art_gallery/gallery/gallery.dart';
 import 'package:art_gallery/gallery_filter/gallery_filter.dart';
 import 'package:art_gallery/preferences/view/preferences_page.dart';
 import 'package:art_gallery/shared/shared.dart';
+import 'package:art_gallery/shared/widgets/flyout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,38 +35,45 @@ class GalleryPage extends StatelessWidget {
             context
                 .read<GalleryFilterBloc>()
                 .add(const GalleryFilterInitializationRequested());
-            GalleryFilterPicker.show(context);
+            showModalFlyout(
+                context: context,
+                builder: (context) {
+                  return GalleryFilterPicker(
+                    onClose: () => Navigator.pop(context),
+                  );
+                });
           }),
         ),
       ),
-      body: LayoutBuilder(builder: (context, constraints) {
-        return Stack(
-          children: [
-            BlocBuilder<GalleryBloc, GalleryState>(
-              builder: (context, state) {
-                switch (state.status) {
-                  case GalleryStatus.failure:
-                    return GalleryError(
-                      onRetry: () => context
-                          .read<GalleryBloc>()
-                          .add(const GalleryFetched()),
-                    );
-                  case GalleryStatus.success:
-                    return GalleryList(
-                      artObjects: state.artObjects,
-                      hasReachedMax: state.hasReachedMax,
-                      onItemTap: (item) =>
-                          _navigateToArtObjectDetails(context, item),
-                    );
-                  case GalleryStatus.initial:
-                  case GalleryStatus.loading:
-                    return const ActivityIndicator();
-                }
-              },
-            ),
-          ],
-        );
-      }),
+      body: const GalleryView(),
+    );
+  }
+}
+
+class GalleryView extends StatelessWidget {
+  const GalleryView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<GalleryBloc, GalleryState>(
+      builder: (context, state) {
+        switch (state.status) {
+          case GalleryStatus.failure:
+            return GalleryError(
+              onRetry: () =>
+                  context.read<GalleryBloc>().add(const GalleryFetched()),
+            );
+          case GalleryStatus.success:
+            return GalleryList(
+              artObjects: state.artObjects,
+              hasReachedMax: state.hasReachedMax,
+              onItemTap: (item) => _navigateToArtObjectDetails(context, item),
+            );
+          case GalleryStatus.initial:
+          case GalleryStatus.loading:
+            return const ActivityIndicator();
+        }
+      },
     );
   }
 
