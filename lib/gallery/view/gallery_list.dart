@@ -43,24 +43,22 @@ class _GalleryListState extends State<GalleryList> {
         children: [
           SafeArea(
             bottom: false,
-            child: ListView.builder(
-              itemBuilder: (BuildContext context, int index) {
-                return index >= widget.artObjects.length
-                    ? Container(
-                        margin: const EdgeInsets.only(top: 16),
-                        child:
-                            const ActivityIndicator(size: 24, strokeWidth: 1.5),
-                      )
-                    : GalleryListItem(
-                        artObject: widget.artObjects[index],
-                        onTap: widget.onItemTap,
-                      );
-              },
-              itemCount: widget.hasReachedMax
-                  ? widget.artObjects.length
-                  : widget.artObjects.length + 1,
-              controller: _scrollController,
-            ),
+            child: constraints.maxWidth < 600
+                ? ListView(
+                    controller: _scrollController,
+                    children: [
+                      ..._mapGalleryItems(widget.artObjects),
+                    ],
+                  )
+                : SingleChildScrollView(
+                    controller: _scrollController,
+                    child: Wrap(
+                      alignment: WrapAlignment.center,
+                      children: [
+                        ..._mapGalleryItems(widget.artObjects),
+                      ],
+                    ),
+                  ),
           ),
           AnimatedPositioned(
             top: _bottomButtonVisible
@@ -82,6 +80,29 @@ class _GalleryListState extends State<GalleryList> {
         ],
       );
     });
+  }
+
+  List<Widget> _mapGalleryItems(List<ArtObject> artobjects) {
+    final itemCount = widget.hasReachedMax
+        ? widget.artObjects.length
+        : widget.artObjects.length + 1;
+    List<Widget> items = [];
+    for (var i = 0; i < itemCount; i++) {
+      final item = i >= widget.artObjects.length
+          ? Container(
+              margin: const EdgeInsets.only(top: 16),
+              child: const ActivityIndicator(size: 24, strokeWidth: 1.5),
+            )
+          : ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 350),
+              child: GalleryListItem(
+                artObject: widget.artObjects[i],
+                onTap: widget.onItemTap,
+              ),
+            );
+      items.add(item);
+    }
+    return items;
   }
 
   @override
