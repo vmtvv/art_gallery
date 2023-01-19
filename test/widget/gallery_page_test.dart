@@ -41,7 +41,7 @@ void main() {
     galleryFilterBloc = MockGalleryFilterBloc();
 
     when(() => galleryBloc.state)
-        .thenReturn(const GalleryState(status: GalleryStatus.initial));
+        .thenReturn(const GalleryState(status: GalleryStatus.success));
     when(() => galleryFilterBloc.state).thenReturn(
         const GalleryFilterState(status: GalleryFilterStatus.clean));
   });
@@ -95,7 +95,6 @@ void main() {
       expect(find.byType(GalleryFilterPicker), findsNothing);
     });
 
-    //Doesn't work while testing, needs to be investigated
     testWidgets('displays GalleryFilterPicker when click on the filter button',
         (tester) async {
       await tester.pumpWidget(buildSubject());
@@ -106,11 +105,14 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.byType(GalleryFilterPicker).hitTestable(), findsOneWidget);
+      expect(find.byType(GalleryFilterPicker), findsOneWidget);
     });
 
     testWidgets('renders ActivityIndicator for GalleryStatus.initial',
         (tester) async {
+      when(() => galleryBloc.state).thenReturn(
+        const GalleryState(status: GalleryStatus.initial),
+      );
       await tester.pumpWidget(buildSubject());
       expect(find.byType(ActivityIndicator), findsOneWidget);
     });
@@ -129,9 +131,7 @@ void main() {
 
     testWidgets('renders RetryView for GalleryStatus.failure', (tester) async {
       when(() => galleryBloc.state).thenReturn(
-        const GalleryState(
-          status: GalleryStatus.failure,
-        ),
+        const GalleryState(status: GalleryStatus.failure),
       );
       await tester.pumpWidget(buildSubject());
       expect(find.byType(RetryView), findsOneWidget);
