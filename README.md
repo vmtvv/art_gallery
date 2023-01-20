@@ -1,27 +1,20 @@
-<h1 align="center"> Art Gallery </h1> <br>
+# Art Gallery
 
-<p align="center">
-<img src="https://i.imgur.com/x8Icn6D.png">
-</p>
-
-Flutter demo app which consumes [Rijks Data API](https://data.rijksmuseum.nl/object-metadata/api/).
-
-
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://user-images.githubusercontent.com/19982200/213733042-66812aee-a1b1-4ca9-80f0-ef4b9fbe0ed3.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://user-images.githubusercontent.com/19982200/213734829-764d6bc3-18bb-4f5c-a467-3c8ecaff37b0.png">
+  <img src="https://user-images.githubusercontent.com/19982200/213734829-764d6bc3-18bb-4f5c-a467-3c8ecaff37b0.png">
+</picture>
 
 ## Features
+- Art objects list
+- List filtering
+- Art object details
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-Art objects list 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-List filtering
-list&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-Art object details
+![art_gallery_list_thumb](https://user-images.githubusercontent.com/19982200/213734285-82908bda-5988-4b76-b3ee-7d353d870b05.png)
+![art_gallery_filter_thumb](https://user-images.githubusercontent.com/19982200/213734322-7c1d6464-0d39-44d3-9e74-888c542ab196.png)
+![art_gallery_details_thumb](https://user-images.githubusercontent.com/19982200/213734352-1abc1a29-bceb-4dcf-a028-6f4404d57077.png)
 
-<p float="left">
-  <img src="https://i.imgur.com/M3FLOav.png">
-  <img src="https://i.imgur.com/YDxKyZb.png">
-  <img src="https://i.imgur.com/GPtjs1x.png">
-</p>
 
 ## Supports
 
