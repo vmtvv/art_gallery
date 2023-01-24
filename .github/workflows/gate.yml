@@ -1,5 +1,4 @@
-
-- name: Gate
+name: Gate
 
 on:
   pull_request:
