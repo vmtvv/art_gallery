@@ -6,6 +6,9 @@
   <img src="https://user-images.githubusercontent.com/19982200/213734829-764d6bc3-18bb-4f5c-a467-3c8ecaff37b0.png">
 </picture>
 
+## Live preview
+[Web App](https://vmtvv.github.io/art_gallery/)
+
 ## Features
 - Art objects list
 - List filtering
